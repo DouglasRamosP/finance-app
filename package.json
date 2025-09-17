@@ -14,8 +14,10 @@
   "devDependencies": {
     "@eslint/json": "^0.13.2",
     "eslint": "^8.46.0",
+    "eslint-config-prettier": "^10.1.8",
     "git-commit-msg-linter": "^5.0.8",
     "husky": "^8.0.3",
-    "lint-staged": "^16.1.6"
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2"
   }
 }
