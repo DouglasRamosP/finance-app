@@ -1,6 +1,8 @@
 import 'dotenv/config.js'
 import express from 'express'
 
+const name = 'Diego'
+
 const app = express()
 
 app.use(express.json())
