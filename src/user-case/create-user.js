@@ -16,7 +16,7 @@ export class CreateUserUseCase {
 
         // inserir usuário no banco de dados
         const user = {
-            ...CreateUserUserParams,
+            ...createUserParams,
             id: ID,
             password: hashedPassword,
         }
