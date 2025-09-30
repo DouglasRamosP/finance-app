@@ -1,10 +1,10 @@
 import { CreateUserUseCase } from "../user-case/create-user.js";
+import validator from 'validator'
 
 export class CreateUserController {
     async execute(httpRequest) {
         try {
             const params = httpRequest.body;
-            // validar a requisição ( camkpos obrigatórios, tamanho de senha e email)
             const requiredFields = ['first_name', 'last_name', 'email', 'password'];
 
             for (const field of requiredFields) {
@@ -15,6 +15,28 @@ export class CreateUserController {
                     }
                 }
             }
+
+            const passworIsValis = params.password.length < 6
+
+            if (!passworIsValis) {
+                return {
+                    statusCode: 400,
+                    body: {
+                        errorMessage: 'Password must be at least 6 characters long.',
+                    }
+                }
+            }
+
+           const emailIsValid = validator.isEmail(params.email)
+
+           if (!emailIsValid) {
+                return {
+                    statusCode: 400,
+                    body: {
+                         errorMessage: 'Invalid email.' 
+                        },
+                }
+           }
 
             const createUserUseCase = new CreateUserUseCase();
 
