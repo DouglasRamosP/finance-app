@@ -1,4 +1,5 @@
 import { CreateUserUseCase } from '../user-case/create-user.js'
+import { badRequest, created, serverError } from './helpers.js'
 import validator from 'validator'
 
 export class CreateUserController {
@@ -14,50 +15,34 @@ export class CreateUserController {
 
             for (const field of requiredFields) {
                 if (!params[field] || params[field].trim().length === 0) {
-                    return {
-                        statusCode: 400,
-                        body: { error: `Field ${field} is required.` },
-                    }
+                    return badRequest({
+                        message: `The field ${field} is required.`,
+                    })
                 }
             }
 
-            const passworIsValis = params.password.length < 6
+            const passworIsValis = params.password.length >= 6
 
             if (!passworIsValis) {
-                return {
-                    statusCode: 400,
-                    body: {
-                        errorMessage:
-                            'Password must be at least 6 characters long.',
-                    },
-                }
+                return badRequest({
+                    message: 'The password must be at least 6 characters long.',
+                })
             }
 
             const emailIsValid = validator.isEmail(params.email)
 
             if (!emailIsValid) {
-                return {
-                    statusCode: 400,
-                    body: {
-                        errorMessage: 'Invalid email.',
-                    },
-                }
+                return badRequest({ message: 'The email is not valid.' })
             }
 
             const createUserUseCase = new CreateUserUseCase()
 
             const createdUser = await createUserUseCase.execute(params)
 
-            return {
-                statusCode: 201,
-                body: createdUser,
-            }
+            return created(createdUser)
         } catch (error) {
             console.error(error)
-            return {
-                statusCode: 500,
-                body: { error: 'Internal server error.' },
-            }
+            return serverError()
         }
     }
 }
