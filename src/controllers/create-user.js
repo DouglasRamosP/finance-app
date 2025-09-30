@@ -1,11 +1,16 @@
-import { CreateUserUseCase } from "../user-case/create-user.js";
+import { CreateUserUseCase } from '../user-case/create-user.js'
 import validator from 'validator'
 
 export class CreateUserController {
     async execute(httpRequest) {
         try {
-            const params = httpRequest.body;
-            const requiredFields = ['first_name', 'last_name', 'email', 'password'];
+            const params = httpRequest.body
+            const requiredFields = [
+                'first_name',
+                'last_name',
+                'email',
+                'password',
+            ]
 
             for (const field of requiredFields) {
                 if (!params[field] || params[field].trim().length === 0) {
@@ -22,25 +27,26 @@ export class CreateUserController {
                 return {
                     statusCode: 400,
                     body: {
-                        errorMessage: 'Password must be at least 6 characters long.',
-                    }
+                        errorMessage:
+                            'Password must be at least 6 characters long.',
+                    },
                 }
             }
 
-           const emailIsValid = validator.isEmail(params.email)
+            const emailIsValid = validator.isEmail(params.email)
 
-           if (!emailIsValid) {
+            if (!emailIsValid) {
                 return {
                     statusCode: 400,
                     body: {
-                         errorMessage: 'Invalid email.' 
-                        },
+                        errorMessage: 'Invalid email.',
+                    },
                 }
-           }
+            }
 
-            const createUserUseCase = new CreateUserUseCase();
+            const createUserUseCase = new CreateUserUseCase()
 
-            const createdUser = await createUserUseCase.execute(params);
+            const createdUser = await createUserUseCase.execute(params)
 
             return {
                 statusCode: 201,
@@ -51,7 +57,7 @@ export class CreateUserController {
             return {
                 statusCode: 500,
                 body: { error: 'Internal server error.' },
-            }  
+            }
         }
     }
 }
