@@ -1,4 +1,4 @@
-import { badRequest, serverError, ok } from './helpers.js'
+import { badRequest, serverError, ok, notFound } from './helpers.js'
 import { GetUserByIdUseCase } from '../user-case/get-user-by-id.js'
 import validator from 'validator'
 
@@ -18,7 +18,7 @@ export class GetUserByIdController {
             )
 
             if (!user) {
-                return badRequest({ message: 'User not found.' })
+                return  notFound({ message: 'User not found.' })
             }
 
             return ok(user)
