@@ -16,7 +16,7 @@ export class UpdateUserUseCase {
                     updateParams.email,
                 )
 
-            if (userAlreadyExists) {
+            if (userAlreadyExists && userAlreadyExists.id !== userId) {
                 throw new EmailAlreadyInUseError(updateParams.email)
             }
         }
@@ -44,6 +44,6 @@ export class UpdateUserUseCase {
             user,
         )
 
-        return updatedUser[0]
+        return updatedUser
     }
 }
