@@ -21,7 +21,7 @@ export const generateInvalidIdResponse = () => {
 }
 
 export const checkPassworIsValid = (body) => {
-    return body.password.length >= 6
+    return body.length >= 6
 }
 
 export const checkIfEmailIsValid = (email) => {
