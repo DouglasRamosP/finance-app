@@ -1,4 +1,4 @@
-import { badRequest } from './http.js'
+import { badRequest, notFound } from './http.js'
 
 import validator from 'validator'
 
@@ -18,6 +18,10 @@ export const generateInvalidIdResponse = () => {
     return badRequest({
         message: 'The provided id is not valid',
     })
+}
+
+export const userNotFoundResponse = () => {
+    return notFound({ message: 'User not found' })
 }
 
 export const checkPassworIsValid = (body) => {
