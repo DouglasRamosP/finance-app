@@ -41,6 +41,6 @@ export class CreateUserUseCase {
 
         const createdUser = await this.createUserRepository.execute(user)
 
-        return createdUser[0]
+        return createdUser
     }
 }
