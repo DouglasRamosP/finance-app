@@ -7,10 +7,10 @@ import { GetUserByIdUseCase } from '../../user-case/user/get-user-by-id.js'
 import { DeleteUserUseCase } from '../../user-case/user/delete-user.js'
 import { UpdateUserUseCase } from '../../user-case/user/update-user.js'
 import { CreateUserUseCase } from '../../user-case/user/create-user.js'
-import { GetUserByIdController } from '../../controllers/get-user-by-id.js'
-import { CreateUserController } from '../../controllers/create-user.js'
-import { DeleteUserController } from '../../controllers/delete-user.js'
-import { UpdateUserController } from '../../controllers/update-user.js'
+import { GetUserByIdController } from '../../controllers/user/get-user-by-id.js'
+import { CreateUserController } from '../../controllers/user/create-user.js'
+import { DeleteUserController } from '../../controllers/user/delete-user.js'
+import { UpdateUserController } from '../../controllers/user/update-user.js'
 
 export const makerGetUserByIdController = () => {
     const postgresGetUserRepository = new PostgresGetUserRepository()
