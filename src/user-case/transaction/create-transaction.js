@@ -8,7 +8,7 @@ export class CreateTransactionUseCase {
         this.getUserByIdRepository = getUserByIdRepository
     }
     async execute(createTransactionParams) {
-        const userId = createTransactionParams.userId
+        const userId = createTransactionParams.user_id
 
         const user = this.getUserByIdRepository.execute(userId)
 
