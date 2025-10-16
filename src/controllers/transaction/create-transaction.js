@@ -1,6 +1,12 @@
 import { badRequest, created, serverError } from '../helpers/http.js'
-import { generateInvalidIdResponse } from '../helpers/user.js'
-import { checkedIfIdIsValid } from '../helpers/validation.js'
+import {
+    generateInvalidIdResponse,
+    requiredFildIsMissingResponse,
+} from '../helpers/user.js'
+import {
+    checkedIfIdIsValid,
+    checkedRequiredFields,
+} from '../helpers/validation.js'
 
 import validator from 'validator'
 
@@ -13,16 +19,15 @@ export class CreateTransactionController {
             const params = httpRequest.body
             const requiredFields = ['user_id', 'name', 'date', 'amount', 'type']
 
-            for (const field of requiredFields) {
-                if (
-                    !params[field] ||
-                    params[field].toString().trim().length === 0
-                ) {
-                    return badRequest({
-                        message: `The field ${field} is required.`,
-                    })
-                }
+            const requiredFieldValidation = checkedRequiredFields(
+                params,
+                requiredFields,
+            )
+
+            if (!requiredFieldValidation.ok) {
+                return requiredFildIsMissingResponse(requiredFieldValidation)
             }
+
             // validar o ID
             const userIdIsValid = checkedIfIdIsValid(params.user_id)
 
@@ -32,12 +37,6 @@ export class CreateTransactionController {
 
             // validar o amount (utilizando BIB validaator) & validar amount <= 0
             const amount = params.amount.toString()
-
-            if (amount <= 0) {
-                return badRequest({
-                    message: 'The amount must be greater than 0.',
-                })
-            }
 
             const amountIsValid = validator.isCurrency(amount, {
                 digits_after_decimal: [2],

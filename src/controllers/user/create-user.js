@@ -2,10 +2,12 @@ import { badRequest, created, serverError } from '../helpers/http.js'
 import {
     generateInvalidPasswordResponse,
     generateEmailAlreadyUseResponse,
+    requiredFildIsMissingResponse,
 } from '../helpers/user.js'
 import {
     checkPassworIsValid,
     checkIfEmailIsValid,
+    checkedRequiredFields,
 } from '../helpers/validation.js'
 
 export class CreateUserController {
@@ -23,12 +25,13 @@ export class CreateUserController {
                 'password',
             ]
 
-            for (const field of requiredFields) {
-                if (!params[field] || params[field].trim().length === 0) {
-                    return badRequest({
-                        message: `The field ${field} is required.`,
-                    })
-                }
+            const requiredFieldValidation = checkedRequiredFields(
+                params,
+                requiredFields,
+            )
+
+            if (!requiredFieldValidation.ok) {
+                return requiredFildIsMissingResponse(requiredFieldValidation)
             }
 
             const passworIsValid = checkPassworIsValid(params.password)
