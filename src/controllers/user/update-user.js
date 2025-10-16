@@ -3,7 +3,7 @@ import {
     generateInvalidPasswordResponse,
     generateEmailAlreadyUseResponse,
     generateInvalidIdResponse,
-} from '../helpers/user.js'
+} from '../helpers/response.js'
 import {
     checkPassworIsValid,
     checkIfEmailIsValid,

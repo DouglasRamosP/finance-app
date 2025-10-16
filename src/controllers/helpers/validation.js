@@ -33,3 +33,15 @@ export const checkedRequiredFields = (params, requiredFields) => {
         missingField: undefined,
     }
 }
+
+export const checkIfAmountIsValid = (amount) => {
+    validator.isCurrency(amount, {
+        digits_after_decimal: [2],
+        allow_negatives: false,
+        decimal_separator: '.',
+    })
+}
+
+export const checkIfTypeIsValid = (type) => {
+    return ['EARNINGS', 'EXPENSES', 'INVESTMENTS'].includes(type)
+}

@@ -1,7 +1,7 @@
 import {
     generateInvalidIdResponse,
     userNotFoundResponse,
-} from '../helpers/user.js'
+} from '../helpers/response.js'
 import { checkedIfIdIsValid } from '../helpers/validation.js'
 import { ok, serverError } from '../helpers/http.js'
 

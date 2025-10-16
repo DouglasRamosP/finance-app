@@ -1,5 +1,5 @@
 import { serverError, ok, notFound } from '../helpers/http.js'
-import { generateInvalidIdResponse } from '../helpers/user.js'
+import { generateInvalidIdResponse } from '../helpers/response.js'
 import { checkedIfIdIsValid } from '../helpers/validation.js'
 
 export class GetUserByIdController {

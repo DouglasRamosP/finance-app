@@ -1,14 +1,16 @@
 import { badRequest, created, serverError } from '../helpers/http.js'
 import {
+    checkIfAmountIsValid,
+    checkIfTypeIsValid,
+} from '../helpers/validation.js'
+import {
     generateInvalidIdResponse,
     requiredFildIsMissingResponse,
-} from '../helpers/user.js'
+} from '../helpers/response.js'
 import {
     checkedIfIdIsValid,
     checkedRequiredFields,
 } from '../helpers/validation.js'
-
-import validator from 'validator'
 
 export class CreateTransactionController {
     constructor(createTransactionUseCase) {
@@ -38,11 +40,7 @@ export class CreateTransactionController {
             // validar o amount (utilizando BIB validaator) & validar amount <= 0
             const amount = params.amount.toString()
 
-            const amountIsValid = validator.isCurrency(amount, {
-                digits_after_decimal: [2],
-                allow_negatives: false,
-                decimal_separator: '.',
-            })
+            const amountIsValid = checkIfAmountIsValid(amount)
 
             if (!amountIsValid) {
                 return badRequest({
@@ -52,11 +50,7 @@ export class CreateTransactionController {
             // validar type (ESRNING, EXPENSE, INVESTMENT)
             const type = params.type.trim().toUpperCase()
 
-            const typeIsValid = [
-                'EARNINGS',
-                'EXPENSES',
-                'INVESTMENTS',
-            ].includes(type)
+            const typeIsValid = checkIfTypeIsValid(type)
 
             if (!typeIsValid) {
                 return badRequest({
