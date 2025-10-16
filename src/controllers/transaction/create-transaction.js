@@ -1,5 +1,6 @@
 import { badRequest, created, serverError } from '../helpers/http.js'
-import { checkedIfIdIsValid, generateInvalidIdResponse } from '../helpers/user.js'
+import { generateInvalidIdResponse } from '../helpers/user.js'
+import { checkedIfIdIsValid } from '../helpers/validation.js'
 
 import validator from 'validator'
 
@@ -52,13 +53,16 @@ export class CreateTransactionController {
             // validar type (ESRNING, EXPENSE, INVESTMENT)
             const type = params.type.trim().toUpperCase()
 
-            const typeIsValid = ['EARNINGS', 'EXPENSES', 'INVESTMENTS'].includes(
-                type,
-            )
+            const typeIsValid = [
+                'EARNINGS',
+                'EXPENSES',
+                'INVESTMENTS',
+            ].includes(type)
 
             if (!typeIsValid) {
                 return badRequest({
-                    message: 'The type must be EARNINGS, EXPENSES or INVESTMENTS',
+                    message:
+                        'The type must be EARNINGS, EXPENSES or INVESTMENTS',
                 })
             }
             const transaction = await this.createTransactionUseCase.execute({

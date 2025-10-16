@@ -2,9 +2,11 @@ import { badRequest, created, serverError } from '../helpers/http.js'
 import {
     generateInvalidPasswordResponse,
     generateEmailAlreadyUseResponse,
+} from '../helpers/user.js'
+import {
     checkPassworIsValid,
     checkIfEmailIsValid,
-} from '../helpers/user.js'
+} from '../helpers/validation.js'
 
 export class CreateUserController {
     constructor(createUserUseCase) {

@@ -3,10 +3,12 @@ import {
     generateInvalidPasswordResponse,
     generateEmailAlreadyUseResponse,
     generateInvalidIdResponse,
+} from '../helpers/user.js'
+import {
     checkPassworIsValid,
     checkIfEmailIsValid,
     checkedIfIdIsValid,
-} from '../helpers/user.js'
+} from '../helpers/validation.js'
 
 import { EmailAlreadyInUseError } from '../../errors/user.js'
 

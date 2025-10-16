@@ -1,8 +1,8 @@
 import {
-    checkedIfIdIsValid,
     generateInvalidIdResponse,
     userNotFoundResponse,
 } from '../helpers/user.js'
+import { checkedIfIdIsValid } from '../helpers/validation.js'
 import { ok, serverError } from '../helpers/http.js'
 
 export class DeleteUserController {
