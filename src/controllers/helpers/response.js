@@ -27,3 +27,9 @@ export const requiredFildIsMissingResponse = (requiredFieldValidation) => {
         message: `The field ${requiredFieldValidation.missingField.toUpperCase()} is required.`,
     })
 }
+
+export const invalidAmountResponse = () => {
+    return badRequest({
+        message: 'The amount must be a valid currency.',
+    })
+}

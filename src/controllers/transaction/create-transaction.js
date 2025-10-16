@@ -5,6 +5,7 @@ import {
 } from '../helpers/validation.js'
 import {
     generateInvalidIdResponse,
+    invalidAmountResponse,
     requiredFildIsMissingResponse,
 } from '../helpers/response.js'
 import {
@@ -43,9 +44,7 @@ export class CreateTransactionController {
             const amountIsValid = checkIfAmountIsValid(amount)
 
             if (!amountIsValid) {
-                return badRequest({
-                    message: 'The amount must be a valid currency.',
-                })
+                return invalidAmountResponse()
             }
             // validar type (ESRNING, EXPENSE, INVESTMENT)
             const type = params.type.trim().toUpperCase()
