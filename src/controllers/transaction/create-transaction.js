@@ -39,7 +39,7 @@ export class CreateTransactionController {
             }
 
             // validar o amount (utilizando BIB validaator) & validar amount <= 0
-            const amount = params.amount.toString()
+            const amount = params.amount
 
             const amountIsValid = checkIfAmountIsValid(amount)
 
