@@ -6,7 +6,10 @@ import {
     makerDeleteUserController,
     makerUpdateUserController,
 } from './src/factories/controllers/user.js'
-import { makerCreateTransactionController } from './src/factories/controllers/transaction.js'
+import {
+    makerCreateTransactionController,
+    makerGetTransactionByUserIdController,
+} from './src/factories/controllers/transaction.js'
 
 const app = express()
 
@@ -46,6 +49,15 @@ app.get('/api/users/:userId', async (request, response) => {
     const getUserByIdController = makerGetUserByIdController()
 
     const { statusCode, body } = await getUserByIdController.execute(request)
+
+    response.status(statusCode).send(body)
+})
+
+app.get('/api/transaction', async (request, response) => {
+    const getTransactionByIdController = makerGetTransactionByUserIdController()
+
+    const { statusCode, body } =
+        await getTransactionByIdController.execute(request)
 
     response.status(statusCode).send(body)
 })
