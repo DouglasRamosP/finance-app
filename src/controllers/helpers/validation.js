@@ -35,7 +35,11 @@ export const checkedRequiredFields = (params, requiredFields) => {
 }
 
 export const checkIfAmountIsValid = (amount) => {
-    validator.isCurrency(amount, {
+    if (typeof amount !== 'number' || isNaN(amount)) {
+        return false
+    }
+
+    return validator.isCurrency(amount.toFixed(2), {
         digits_after_decimal: [2],
         allow_negatives: false,
         decimal_separator: '.',
