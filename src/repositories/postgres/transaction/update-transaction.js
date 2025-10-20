@@ -1,16 +1,16 @@
 import { PostgresHelper } from '../../../db/postgres/helper.js'
 
 export class PostgresUpdateTransactionRepository {
-    async execute(userId, updateTrasactionParams) {
-        const updateFields = []
-        const updateValues = []
+    async execute(transactionId, updateTrasactionParams) {
+    const updateFields = []
+    const updateValues = []
 
         Object.keys(updateTrasactionParams).forEach((key) => {
             updateFields.push(`${key} = $${updateValues.length + 1}`)
             updateValues.push(updateTrasactionParams[key])
         })
 
-        updateValues.push(userId)
+        updateValues.push(transactionId)
 
         const updateQuery = `
         UPDATE transactions SET ${updateFields.join(',')}
