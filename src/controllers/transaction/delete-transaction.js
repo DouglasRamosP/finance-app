@@ -1,9 +1,9 @@
-import { ok, serverError } from '../helpers/http'
+import { ok, serverError } from '../helpers/http.js'
 import {
     generateInvalidIdResponse,
     userNotFoundResponse,
-} from '../helpers/response'
-import { checkedIfIdIsValid } from '../helpers/validation'
+} from '../helpers/response.js'
+import { checkedIfIdIsValid } from '../helpers/validation.js'
 
 export class DeleteTransactionController {
     constructor(deleteTransactionUseCase) {
