@@ -46,7 +46,7 @@ app.patch('/api/users/:userId', async (request, response) => {
     response.status(statusCode).send(body)
 })
 
-app.patch('/api/users/:transactionId', async (request, response) => {
+app.patch('/api/transaction/:transactionId', async (request, response) => {
     const updateTransactionController = makerUpdateTransactionController()
 
     const { statusCode, body } =
