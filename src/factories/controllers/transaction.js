@@ -8,6 +8,9 @@ import { GetTransactionByUserIdUseCase } from '../../user-case/transaction/get-t
 import { PostgresUpdateTransactionRepository } from '../../repositories/postgres/transaction/update-transaction.js'
 import { UpdateTransactionUseCase } from '../../user-case/transaction/update-transaction.js'
 import { UpdateTransactionController } from '../../controllers/transaction/update-transaction.js'
+import { PostgresDeleteTransactionRepository } from '../../repositories/postgres/transaction/delete-transaction.js'
+import { DeleteTransactionUseCase } from '../../user-case/transaction/delete-transaction.js'
+import { DeleteTransactionController } from '../../controllers/transaction/delete-transaction.js'
 
 export const makerCreateTransactionController = () => {
     const createTransactionRepository =
@@ -57,4 +60,19 @@ export const makerUpdateTransactionController = () => {
     )
 
     return updateTransactionController
+}
+
+export const makerDeleteTransactionController = () => {
+    const postgresDeleteTransactionRepository =
+        new PostgresDeleteTransactionRepository()
+
+    const deleteTransactionUseCase = new DeleteTransactionUseCase(
+        postgresDeleteTransactionRepository,
+    )
+
+    const deleteTransactionController = new DeleteTransactionController(
+        deleteTransactionUseCase,
+    )
+
+    return deleteTransactionController
 }
