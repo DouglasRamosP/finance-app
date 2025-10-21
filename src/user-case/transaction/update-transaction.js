@@ -1,4 +1,4 @@
-export class updateTransactionUsecase {
+export class UpdateTransactionUsecase {
     constructor(postgresUpdateTransactionRepository) {
         this.postgresUpdateTransactionRepository =
             postgresUpdateTransactionRepository
