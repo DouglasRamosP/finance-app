@@ -8,6 +8,7 @@ import {
 } from './src/factories/controllers/user.js'
 import {
     makerCreateTransactionController,
+    makerDeleteTransactionController,
     makerGetTransactionByUserIdController,
     makerUpdateTransactionController,
 } from './src/factories/controllers/transaction.js'
@@ -34,6 +35,15 @@ app.delete('/api/users/:userId', async (request, response) => {
     const deleteUserController = makerDeleteUserController()
 
     const { statusCode, body } = await deleteUserController.execute(request)
+
+    response.status(statusCode).send(body)
+})
+
+app.delete('/api/transaction/:transactionId', async (request, response) => {
+    const deleteTransactionController = makerDeleteTransactionController()
+
+    const { statusCode, body } =
+        await deleteTransactionController.execute(request)
 
     response.status(statusCode).send(body)
 })
