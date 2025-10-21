@@ -1,25 +1,12 @@
-import { UserNotFoundError } from '../../errors/user'
-
 export class updateTransactionUsecase {
-    constructor(
-        postgresUpdateTransactionRepository,
-        postgresGetUserRepository,
-    ) {
+    constructor(postgresUpdateTransactionRepository) {
         this.postgresUpdateTransactionRepository =
             postgresUpdateTransactionRepository
-        this.postgresGetUserRepository = postgresGetUserRepository
     }
-    async execute(updateTransactionParams) {
-        const userAlreadyExists = await this.postgresGetUserRepository.execute(
-            updateTransactionParams.userId,
-        )
-
-        if (!userAlreadyExists) {
-            throw new UserNotFoundError()
-        }
-
+    async execute(transactionId, updateTransactionParams) {
         const updateTransaction =
             this.postgresUpdateTransactionRepository.execute(
+                transactionId,
                 updateTransactionParams,
             )
 
