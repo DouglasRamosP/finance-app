@@ -1,7 +1,7 @@
 import { ok, serverError } from '../helpers/http.js'
 import {
     generateInvalidIdResponse,
-    userNotFoundResponse,
+    transactionNotFoundResponse,
 } from '../helpers/response.js'
 import { checkedIfIdIsValid } from '../helpers/validation.js'
 
@@ -23,7 +23,7 @@ export class DeleteTransactionController {
                 await this.deleteTransactionUseCase.execute(transactionId)
 
             if (!deleteTransaction) {
-                return userNotFoundResponse()
+                return transactionNotFoundResponse()
             }
 
             return ok(deleteTransaction)

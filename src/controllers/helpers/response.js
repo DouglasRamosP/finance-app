@@ -22,6 +22,10 @@ export const userNotFoundResponse = () => {
     return notFound({ message: 'User not found' })
 }
 
+export const transactionNotFoundResponse = () => {
+    return notFound({ message: 'transaction not found' })
+}
+
 export const requiredFildIsMissingResponse = (requiredFieldValidation) => {
     return badRequest({
         message: `The field ${requiredFieldValidation.missingField.toUpperCase()} is required.`,
