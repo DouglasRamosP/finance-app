@@ -5,6 +5,7 @@ import {
     makerCreateUserController,
     makerDeleteUserController,
     makerUpdateUserController,
+    makerGetUserBalanceController,
 } from './src/factories/controllers/user.js'
 import {
     makerCreateTransactionController,
@@ -78,6 +79,14 @@ app.get('/api/transaction', async (request, response) => {
 
     const { statusCode, body } =
         await getTransactionByIdController.execute(request)
+
+    response.status(statusCode).send(body)
+})
+
+app.get('/api/users/:userId/balance', async (request, response) => {
+    const getUserBalanceController = makerGetUserBalanceController()
+
+    const { statusCode, body } = await getUserBalanceController.execute(request)
 
     response.status(statusCode).send(body)
 })
