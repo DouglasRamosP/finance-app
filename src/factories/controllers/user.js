@@ -66,16 +66,21 @@ export const makerUpdateUserController = () => {
 }
 
 export const makerGetUserBalanceController = () => {
+    // Repositórios
     const postgresGetUserBalanceRepository =
         new PostgresGetUserBalanceRepository()
 
-    const getUserByIdUseCase = new GetUserByIdUseCase()
+    // ATENÇÃO: instancie e injete o repo de usuário no use case o getUserByIdUseCase depende dele
+    const postgresGetUserRepository = new PostgresGetUserRepository()
+    const getUserByIdUseCase = new GetUserByIdUseCase(postgresGetUserRepository)
 
+    // Use case de balance recebe ambos
     const getUserBalanceUseCase = new GetUserBalanceUseCase(
         postgresGetUserBalanceRepository,
         getUserByIdUseCase,
     )
 
+    // Controller
     const getUserBalanceController = new GetUserBalanceController(
         getUserBalanceUseCase,
     )
