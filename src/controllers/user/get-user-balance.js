@@ -12,7 +12,7 @@ export class GetUserBalanceController {
     }
     async execute(httpRequest) {
         try {
-            const userId = httpRequest.param.userId
+            const userId = httpRequest.params.userId
 
             if (!userId) {
                 return userNotFoundResponse()
