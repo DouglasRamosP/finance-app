@@ -21,18 +21,6 @@ export class UpdateUserController {
                 return generateInvalidIdResponse()
             }
 
-            const allowedFields = ['firstName', 'lastName', 'email', 'password']
-
-            const someFieldIsNotAllowed = Object.keys(params).some(
-                (field) => !allowedFields.includes(field),
-            )
-
-            if (someFieldIsNotAllowed) {
-                return badRequest({
-                    message: 'Some provided field is not allowed.',
-                })
-            }
-
             await updateUserSchema.parseAsync(params)
 
             const updateUser = await this.updateUserUseCase.execute(
@@ -43,9 +31,15 @@ export class UpdateUserController {
             return ok(updateUser)
         } catch (error) {
             if (error instanceof ZodError) {
-                return badRequest({
-                    message: error.issues[0].message,
-                })
+                if (error.issues[0]?.code === 'unrecognized_keys') {
+                    return badRequest({
+                        message: 'Some provided field is not allowed.',
+                    })
+                } else {
+                    return badRequest({
+                        message: error.issues[0].message,
+                    })
+                }
             }
             if (error instanceof EmailAlreadyInUseError) {
                 return badRequest({ message: error.message })
