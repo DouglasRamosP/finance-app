@@ -1,5 +1,6 @@
+import { createuserSchema } from '../../schemas/user.js'
 import { badRequest, created, serverError } from '../helpers/http.js'
-import { z, ZodError } from 'zod'
+import { ZodError } from 'zod'
 
 export class CreateUserController {
     constructor(createUserUseCase) {
@@ -8,13 +9,6 @@ export class CreateUserController {
 
     async execute(httpRequest) {
         try {
-            const createuserSchema = z.object({
-                first_name: z.string().trim().min(1),
-                last_name: z.string().trim().min(1),
-                email: z.string().email().trim().min(1),
-                password: z.string().trim().min(6),
-            })
-
             const params = httpRequest.body
 
             await createuserSchema.parseAsync(params)

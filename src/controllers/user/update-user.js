@@ -1,16 +1,10 @@
 import { badRequest, ok, serverError } from '../helpers/http.js'
-import {
-    generateInvalidPasswordResponse,
-    generateEmailAlreadyUseResponse,
-    generateInvalidIdResponse,
-} from '../helpers/response.js'
-import {
-    checkPassworIsValid,
-    checkIfEmailIsValid,
-    checkedIfIdIsValid,
-} from '../helpers/validation.js'
+import { generateInvalidIdResponse } from '../helpers/response.js'
+import { checkedIfIdIsValid } from '../helpers/validation.js'
 
 import { EmailAlreadyInUseError } from '../../errors/user.js'
+import { updateUserSchema } from '../../schemas/user.js'
+import { ZodError } from 'zod'
 
 export class UpdateUserController {
     constructor(updateUserUseCase) {
@@ -39,21 +33,7 @@ export class UpdateUserController {
                 })
             }
 
-            if (params.password) {
-                const passworIsValid = checkPassworIsValid(params.password)
-
-                if (!passworIsValid) {
-                    return generateInvalidPasswordResponse()
-                }
-            }
-
-            if (params.email) {
-                const emailIsValid = checkIfEmailIsValid(params.email)
-
-                if (!emailIsValid) {
-                    return generateEmailAlreadyUseResponse()
-                }
-            }
+            await updateUserSchema.parseAsync(params)
 
             const updateUser = await this.updateUserUseCase.execute(
                 userId,
@@ -62,6 +42,11 @@ export class UpdateUserController {
 
             return ok(updateUser)
         } catch (error) {
+            if (error instanceof ZodError) {
+                return badRequest({
+                    message: error.issues[0].message,
+                })
+            }
             if (error instanceof EmailAlreadyInUseError) {
                 return badRequest({ message: error.message })
             }
