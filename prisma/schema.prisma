@@ -20,4 +20,21 @@ model users {
   last_name String @db.VarChar(50)
   email String @db.VarChar(100) @unique
   password String @db.VarChar(100)
+  transactions transactions[]
+}
+
+model transactions {
+  id String @id @default(uuid())
+  user_id String
+  name String @db.VarChar(50)
+  date DateTime
+  amount Decimal @db.Decimal(10, 2)
+  type TransactionType 
+  user users @relation(fields: [user_id], references: [id])
+}
+
+enum TransactionType {
+  EARNINGS
+  EXPANSES
+  INVESTMENTS
 }
