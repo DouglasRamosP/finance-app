@@ -35,6 +35,6 @@ model transactions {
 
 enum TransactionType {
   EARNINGS
-  EXPANSES
+  EXPENSES
   INVESTMENTS
 }
