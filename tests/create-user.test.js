@@ -1,3 +1,4 @@
+import { JSONSchemaGenerator } from 'zod/v4/core'
 import { CreateUserController } from '../src/controllers/user/create-user.js'
 
 describe('Create User Controller', () => {
@@ -105,7 +106,7 @@ describe('Create User Controller', () => {
         expect(result.statusCode).toBe(400)
     })
 
-     it('should return 400 if email is not valid', async () => {
+    it('should return 400 if email is not valid', async () => {
         //arrange
         const CreateUserUseCase = new CreateUserUseCaseStub()
         const createUserController = new CreateUserController(CreateUserUseCase)
@@ -145,5 +146,28 @@ describe('Create User Controller', () => {
 
         // assert
         expect(result.statusCode).toBe(400)
+    })
+
+    it('should call CreateUserUseCase with correct params', async () => {
+        //arrange
+        const createUserUseCase = new CreateUserUseCaseStub()
+        const createUserController = new CreateUserController(createUserUseCase)
+
+        const httpRequest = {
+            body: {
+                first_name: 'Teste',
+                last_name: 'Testando',
+                email: 'teste@email.com',
+                password: '123456',
+            },
+        }
+
+        const executeSpy = jest.spyOn(createUserUseCase, 'execute')
+
+        // act
+        await createUserController.execute(httpRequest)
+
+        // assert
+        expect(executeSpy).toHaveBeenCalledWith(httpRequest.body)
     })
 })
