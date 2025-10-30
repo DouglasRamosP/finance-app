@@ -1,4 +1,3 @@
-import { JSONSchemaGenerator } from 'zod/v4/core'
 import { CreateUserController } from '../src/controllers/user/create-user.js'
 
 describe('Create User Controller', () => {
