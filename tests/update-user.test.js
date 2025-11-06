@@ -96,4 +96,16 @@ describe('UpdateUserController', () => {
         // assert
         expect(test.statusCode).toBe(400)
     })
+
+    it('should return 500 if UpdateUserUseCase throws with generic error', async () => {
+        // arrange
+        const { sut, updateUserUseCase } = makeSut()
+        jest.spyOn(updateUserUseCase, 'execute').mockRejectedValueOnce(
+            new Error(),
+        )
+        // act
+        const test = await sut.execute(httpRequest)
+        // assert
+        expect(test.statusCode).toBe(500)
+    })
 })
