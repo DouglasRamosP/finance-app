@@ -40,8 +40,18 @@ describe('GetUserByIdController', () => {
         // arrange
         const { sut } = makeSut()
         // act
-        const test = await sut.execute({params:{userId: 'invalid_id'}})
+        const test = await sut.execute({ params: { userId: 'invalid_id' } })
         // assert
         expect(test.statusCode).toBe(400)
+    })
+
+    it('should return 404 when a userId not found', async () => {
+        // arrange
+        const { sut, getUserByIdUseCase } = makeSut()
+        jest.spyOn(getUserByIdUseCase, 'execute').mockReturnValueOnce(null)
+        // act
+        const test = await sut.execute(httpRequest)
+        // assert
+        expect(test.statusCode).toBe(404)
     })
 })
