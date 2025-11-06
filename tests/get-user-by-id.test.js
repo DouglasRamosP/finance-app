@@ -35,4 +35,13 @@ describe('GetUserByIdController', () => {
         // assert
         expect(test.statusCode).toBe(200)
     })
+
+    it('should return 400 when a invalid userId reported ', async () => {
+        // arrange
+        const { sut } = makeSut()
+        // act
+        const test = await sut.execute({params:{userId: 'invalid_id'}})
+        // assert
+        expect(test.statusCode).toBe(400)
+    })
 })
