@@ -33,4 +33,18 @@ describe('Create Transaction Controller', () => {
         // assert
         expect(test.statusCode).toBe(201)
     })
+
+    it('should return 400 when missing', async () => {
+        // arrange
+        const { sut } = makeSut()
+        // act
+        const test = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                user_id: 'invalid_id',
+            },
+        })
+        // assert
+        expect(test.statusCode).toBe(400)
+    })
 })
