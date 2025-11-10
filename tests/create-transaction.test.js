@@ -1,3 +1,4 @@
+import { date } from 'zod'
 import { CreateTransactionController } from '../src/controllers/transaction/create-transaction'
 import { faker } from '@faker-js/faker'
 
@@ -56,6 +57,20 @@ describe('Create Transaction Controller', () => {
             body: {
                 ...httpRequest.body,
                 name: undefined,
+            },
+        })
+        // assert
+        expect(test.statusCode).toBe(400)
+    })
+
+    it('should return 400 when date missing', async () => {
+        // arrange
+        const { sut } = makeSut()
+        // act
+        const test = await sut.execute({
+            body: {
+                ...httpRequest.body,
+                date: undefined,
             },
         })
         // assert
