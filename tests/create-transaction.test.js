@@ -90,17 +90,15 @@ describe('Create Transaction Controller', () => {
         expect(test.statusCode).toBe(400)
     })
 
-    it('should return 400 when type missing', async () => {
+    it('should return 500 when CreateTransactionUseCase throws', async () => {
         // arrange
-        const { sut } = makeSut()
+        const { sut, createTransactionUseCase } = makeSut()
+        jest.spyOn(createTransactionUseCase, 'execute').mockRejectedValueOnce(
+            new Error(),
+        )
         // act
-        const test = await sut.execute({
-            body: {
-                ...httpRequest.body,
-                type: undefined,
-            },
-        })
+        const test = await sut.execute(httpRequest)
         // assert
-        expect(test.statusCode).toBe(400)
+        expect(test.statusCode).toBe(500)
     })
 })
