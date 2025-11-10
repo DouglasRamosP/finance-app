@@ -1,4 +1,3 @@
-import { date } from 'zod'
 import { CreateTransactionController } from '../src/controllers/transaction/create-transaction'
 import { faker } from '@faker-js/faker'
 
