@@ -32,4 +32,15 @@ describe('Delete Transaction Controller', () => {
         // assert
         expect(test.statusCode).toBe(200)
     })
+
+    it('should return 400 when id is invalid', async () => {
+        // aarange
+        const { sut } = makeSut()
+        // act
+        const test = await sut.execute({
+            params: { transactionId: 'invalid_id' },
+        })
+        // assert
+        expect(test.statusCode).toBe(400)
+    })
 })
