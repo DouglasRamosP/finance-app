@@ -29,7 +29,7 @@ export class DeleteTransactionController {
             return ok(deleteTransaction)
         } catch (error) {
             console.error(error)
-            return serverError
+            return serverError()
         }
     }
 }
