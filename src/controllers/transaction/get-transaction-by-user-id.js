@@ -17,7 +17,7 @@ export class GetTransactionByUserIdController {
             // Verificar se o userId foi passado como parametro
             const userId = httpRequest.query.userId
             if (!userId) {
-                return requiredFildIsMissingResponse('userId')
+                return requiredFildIsMissingResponse(userId)
             }
             // Verificar se o userId é um ID válido
             const userIdIsValid = checkedIfIdIsValid(userId)
