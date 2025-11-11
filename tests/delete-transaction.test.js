@@ -1,3 +1,4 @@
+import { JSONSchemaGenerator } from 'zod/v4/core'
 import { DeleteTransactionController } from '../src/controllers/transaction/delete-transaction'
 
 import { faker } from '@faker-js/faker'
@@ -42,5 +43,19 @@ describe('Delete Transaction Controller', () => {
         })
         // assert
         expect(test.statusCode).toBe(400)
+    })
+
+    it('should return 404 when transaction is not found', async () => {
+        // aarange
+        const { sut, deletetransactionUseCase } = makeSut()
+        jest.spyOn(deletetransactionUseCase, 'execute').mockResolvedValueOnce(
+            null,
+        )
+        // act
+        const test = await sut.execute({
+            params: { transactionId: faker.string.uuid() },
+        })
+        // assert
+        expect(test.statusCode).toBe(404)
     })
 })
