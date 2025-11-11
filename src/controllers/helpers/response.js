@@ -26,11 +26,17 @@ export const transactionNotFoundResponse = () => {
     return notFound({ message: 'transaction not found' })
 }
 
-export const requiredFildIsMissingResponse = (requiredFieldValidation) => {
+export const requiredFildIsMissingResponse = (field) => {
+    // se o controller já mandar uma string, beleza
+    const missing = typeof field === 'string'
+        ? field
+        : field?.missingField ?? 'unknown'
+
     return badRequest({
-        message: `The field ${requiredFieldValidation.missingField.toUpperCase()} is required.`,
+        message: `The field ${missing.toUpperCase()} is required.`,
     })
 }
+
 
 export const invalidAmountResponse = () => {
     return badRequest({
