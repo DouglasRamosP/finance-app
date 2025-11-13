@@ -21,3 +21,8 @@ export const createTransactionSchema = z.object({
         ),
     type: z.enum(['EXPENSES', 'EARNINGS', 'INVESTMENTS']),
 })
+
+export const updateTransactionSchema = createTransactionSchema
+    .omit({ user_id: true })
+    .partial()
+    .strict({ message: 'some provided field is not allowed' })
