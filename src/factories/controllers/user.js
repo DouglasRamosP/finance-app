@@ -62,10 +62,13 @@ export const makerDeleteUserController = () => {
 }
 
 export const makerUpdateUserController = () => {
+    const postgresGetUserByEmailRepository =
+        new PostgresGetUserByEmailRepository()
     const postgresUpdateUserRepository = new PostgresUpdateUserRepository()
 
     const updateUserUseCase = new UpdateUserUseCase(
         postgresUpdateUserRepository,
+        postgresGetUserByEmailRepository,
     )
 
     const updateUserController = new UpdateUserController(updateUserUseCase)
