@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { GetUserByIdController } from '../src/controllers/user/get-user-by-id'
+import { GetUserByIdController } from '../../src/controllers/user/get-user-by-id'
 
 describe('GetUserByIdController', () => {
     class getUserByIdUseCaseStub {

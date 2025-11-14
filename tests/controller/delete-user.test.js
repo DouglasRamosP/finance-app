@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { DeleteUserController } from '../src/controllers/user/delete-user'
+import { DeleteUserController } from '../../src/controllers/user/delete-user'
 
 describe('Delete User Controller', () => {
     class DeleteUserUseCaseStub {

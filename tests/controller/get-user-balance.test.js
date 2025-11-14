@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import { GetUserBalanceController } from '../src/controllers/user/get-user-balance'
-import { UserNotFoundError } from '../src/errors/user'
+import { GetUserBalanceController } from '../../src/controllers/user/get-user-balance'
+import { UserNotFoundError } from '../../src/errors/user'
 
 describe('GetUserBalanceController', () => {
     class GetUserBalanceUseCaseStub {

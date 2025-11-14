@@ -1,4 +1,4 @@
-import { UpdateTransactionController } from '../src/controllers/transaction/update-transaction'
+import { UpdateTransactionController } from '../../src/controllers/transaction/update-transaction'
 import { faker } from '@faker-js/faker'
 
 describe('UpdateTransactionController', () => {

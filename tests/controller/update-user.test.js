@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import { UpdateUserController } from '../src/controllers/user/update-user'
-import { EmailAlreadyInUseError } from '../src/errors/user'
+import { UpdateUserController } from '../../src/controllers/user/update-user'
+import { EmailAlreadyInUseError } from '../../src/errors/user'
 
 describe('UpdateUserController', () => {
     class UpdateUserUseCaseStub {
@@ -130,6 +130,9 @@ describe('UpdateUserController', () => {
         // act
         await sut.execute(httpRequest)
         // assert
-        expect(executeSpy).toHaveBeenCalledWith(httpRequest.params.userId, httpRequest.body)
+        expect(executeSpy).toHaveBeenCalledWith(
+            httpRequest.params.userId,
+            httpRequest.body,
+        )
     })
 })

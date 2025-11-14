@@ -1,4 +1,4 @@
-import { DeleteTransactionController } from '../src/controllers/transaction/delete-transaction'
+import { DeleteTransactionController } from '../../src/controllers/transaction/delete-transaction'
 
 import { faker } from '@faker-js/faker'
 

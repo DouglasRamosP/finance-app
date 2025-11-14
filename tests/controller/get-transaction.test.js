@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
-import { GetTransactionByUserIdController } from '../src/controllers/transaction/get-transaction-by-user-id'
-import { UserNotFoundError } from '../src/errors/user'
+import { GetTransactionByUserIdController } from '../../src/controllers/transaction/get-transaction-by-user-id'
+import { UserNotFoundError } from '../../src/errors/user'
 
 describe('GetTransactionController', () => {
     class GetTransactionUseCaseStub {
@@ -68,9 +68,11 @@ describe('GetTransactionController', () => {
     it('should return 404 when user not found', async () => {
         // arrange
         const { sut, getTransactionUseCase } = makeSut()
-        jest.spyOn(getTransactionUseCase, 'execute').mockImplementationOnce(() => {
-            throw new UserNotFoundError()
-        })
+        jest.spyOn(getTransactionUseCase, 'execute').mockImplementationOnce(
+            () => {
+                throw new UserNotFoundError()
+            },
+        )
         // act
         const test = await sut.execute(httpRequest)
         // assert
@@ -88,18 +90,18 @@ describe('GetTransactionController', () => {
     })
 
     it('should call GetTransTransactionByUserIdUseCse with correct params', async () => {
-            // arrange
-            const { sut, getTransactionUseCase } = makeSut()
-            const executeSpy = jest.spyOn(getTransactionUseCase, 'execute')
-    
-            const userId = faker.string.uuid()
-            // act
-            await sut.execute({
-                query: {
-                    userId,
-                },
-            })
-            // assert
-            expect(executeSpy).toHaveBeenCalledWith(userId)
+        // arrange
+        const { sut, getTransactionUseCase } = makeSut()
+        const executeSpy = jest.spyOn(getTransactionUseCase, 'execute')
+
+        const userId = faker.string.uuid()
+        // act
+        await sut.execute({
+            query: {
+                userId,
+            },
         })
+        // assert
+        expect(executeSpy).toHaveBeenCalledWith(userId)
+    })
 })
