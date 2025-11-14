@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid'
-
 import { EmailAlreadyInUseError } from '../../errors/user.js'
 
 export class CreateUserUseCase {
@@ -7,10 +5,12 @@ export class CreateUserUseCase {
         postgresGetUserByEmailRepository,
         createUserRepository,
         passwordHasherAdapter,
+        idGeneratorAdapter,
     ) {
         this.postgresGetUserByEmailRepository = postgresGetUserByEmailRepository
         this.createUserRepository = createUserRepository
         this.passwordHasherAdapter = passwordHasherAdapter
+        this.idGeneratorAdapter = idGeneratorAdapter
     }
     async execute(createUserParams) {
         // todo: verificar se o email já existe
@@ -25,7 +25,7 @@ export class CreateUserUseCase {
         }
 
         // gerar ID do usuário
-        const ID = uuidv4()
+        const ID = this.idGeneratorAdapter.execute()
 
         // criptografar a senha
         const hashedPassword = await this.passwordHasherAdapter.execute(
