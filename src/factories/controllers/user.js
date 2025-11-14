@@ -14,6 +14,7 @@ import { UpdateUserController } from '../../controllers/user/update-user.js'
 import { PostgresGetUserBalanceRepository } from '../../repositories/postgres/user/get-user-balance.js'
 import { GetUserBalanceUseCase } from '../../user-case/user/get-user-balance.js'
 import { GetUserBalanceController } from '../../controllers/user/get-user-balance.js'
+import { PasswordHasherAdapter } from '../../adapters/password-hasher.js'
 
 export const makerGetUserByIdController = () => {
     const postgresGetUserRepository = new PostgresGetUserRepository()
@@ -26,6 +27,8 @@ export const makerGetUserByIdController = () => {
 }
 
 export const makerCreateUserController = () => {
+    const passwordHasherAdapter = new PasswordHasherAdapter()
+
     const postgresGetUserByEmailRepository =
         new PostgresGetUserByEmailRepository()
 
@@ -34,6 +37,7 @@ export const makerCreateUserController = () => {
     const createUserUseCase = new CreateUserUseCase(
         postgresGetUserByEmailRepository,
         postgresCreateUserRepository,
+        passwordHasherAdapter,
     )
 
     const createUserController = new CreateUserController(createUserUseCase)
