@@ -1,4 +1,4 @@
-import { DeleteUserUseCase } from './delete-user'
+import { DeleteUserUseCase } from '../../src/user-case/user/delete-user'
 import { faker } from '@faker-js/faker'
 
 describe('DeleteUserUseCase', () => {
