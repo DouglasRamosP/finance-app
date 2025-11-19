@@ -37,8 +37,8 @@ describe('UpdateUserUseCase', () => {
         const passwordHasherAdapter = new PasswordHasherAdapterStub()
 
         const sut = new UpdateUserUseCase(
-            updateUserRepository, 
-            getUserByEmailRepository, 
+            updateUserRepository,
+            getUserByEmailRepository,
             passwordHasherAdapter,
         )
 
@@ -116,5 +116,29 @@ describe('UpdateUserUseCase', () => {
         await expect(promise).rejects.toThrow(
             new EmailAlreadyInUseError(user.email),
         )
+    })
+
+    it('should call UpdateUserRepository with correct params', async () => {
+        // arrange
+        const { sut, updateUserRepository } = makeSut()
+        const updateUserRepositorySpy = jest.spyOn(
+            updateUserRepository,
+            'execute',
+        )
+        const updateUserParams = {
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            password: user.password,
+        }
+
+        // act
+        await sut.execute(user.id, updateUserParams)
+
+        // assert
+        expect(updateUserRepositorySpy).toHaveBeenCalledWith(user.id, {
+            ...updateUserParams,
+            password: 'hashed_password',
+        })
     })
 })
