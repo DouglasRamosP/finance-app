@@ -1,17 +1,12 @@
 import { DeleteTransactionController } from '../../src/controllers/transaction/delete-transaction'
 
 import { faker } from '@faker-js/faker'
+import { transaction } from '../fixtures/transaction'
 
 describe('Delete Transaction Controller', () => {
     class DeleteTransactionUseCaseStub {
         async execute() {
-            return {
-                user_id: faker.string.uuid(),
-                id: faker.string.uuid(),
-                name: faker.commerce.productName(),
-                amount: Number(faker.finance.amount()),
-                type: 'EXPENSES',
-            }
+            return transaction
         }
     }
 
