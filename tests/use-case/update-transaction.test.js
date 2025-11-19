@@ -1,5 +1,5 @@
-import { faker } from "@faker-js/faker"
-import { UpdateTransactionUseCase } from "../../src/user-case/transaction/update-transaction"
+import { faker } from '@faker-js/faker'
+import { UpdateTransactionUseCase } from '../../src/user-case/transaction/update-transaction'
 
 describe('UpdateTransactionUseCase', () => {
     const transaction = {
@@ -42,5 +42,27 @@ describe('UpdateTransactionUseCase', () => {
 
         // assert
         expect(result).toEqual(transaction)
+    })
+
+    it('should call UpdateTransactionRepository with correct params', async () => {
+        // arrange
+        const { sut, updateTransactionRepository } = makeSut()
+        const updateTransactionRepositorySpy = jest.spyOn(
+            updateTransactionRepository,
+            'execute',
+        )
+
+        // act
+        await sut.execute(transaction.id, {
+            amount: transaction.amount,
+        })
+
+        // assert
+        expect(updateTransactionRepositorySpy).toHaveBeenCalledWith(
+            transaction.id,
+            {
+                amount: transaction.amount,
+            },
+        )
     })
 })
