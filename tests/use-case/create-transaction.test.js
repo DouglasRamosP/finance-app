@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker"
-import { CreateTransactionUseCase } from "../../src/user-case/transaction/create-transaction"
-import { UserNotFoundError } from "../../src/errors/user"
+import { faker } from '@faker-js/faker'
+import { CreateTransactionUseCase } from '../../src/user-case/transaction/create-transaction'
+import { UserNotFoundError } from '../../src/errors/user'
 
 describe('CreateTransactionUseCase', () => {
     const createTransactionParams = {
