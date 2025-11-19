@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker'
 import { GetUserBalanceUseCase } from '../../src/user-case/user/get-user-balance'
 import { UserNotFoundError } from '../../src/errors/user'
+import { user } from '../fixtures/user'
 
 describe('GetBalanceUseCase', () => {
     const userBalance = {
@@ -18,15 +19,7 @@ describe('GetBalanceUseCase', () => {
 
     class GetUserByIdRepositoryStub {
         async execute() {
-            return {
-                id: faker.string.uuid(),
-                first_name: faker.person.firstName(),
-                last_name: faker.person.lastName(),
-                email: faker.internet.email(),
-                password: faker.internet.password({
-                    length: 7,
-                }),
-            }
+            return user
         }
     }
 
@@ -86,7 +79,7 @@ describe('GetBalanceUseCase', () => {
         expect(getUserByIdRepositorySpy).toHaveBeenCalledWith(userId)
     })
 
-     it('should call GetUserBalanceRepository with correct params', async () => {
+    it('should call GetUserBalanceRepository with correct params', async () => {
         // arrange
         const { sut, getUserBalanceRepository } = makeSut()
         const userId = faker.string.uuid()
