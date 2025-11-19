@@ -4,7 +4,7 @@ export class UpdateTransactionUseCase {
             postgresUpdateTransactionRepository
     }
     async execute(transactionId, updateTransactionParams) {
-        const updateTransaction =
+        const updateTransaction = await
             this.postgresUpdateTransactionRepository.execute(
                 transactionId,
                 updateTransactionParams,
