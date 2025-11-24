@@ -1,58 +1,25 @@
 import 'dotenv/config.js'
 import express from 'express'
-import {
-    makerGetUserByIdController,
-    makerCreateUserController,
-    makerDeleteUserController,
-    makerUpdateUserController,
-    makerGetUserBalanceController,
-} from './src/factories/controllers/user.js'
+
 import {
     makerCreateTransactionController,
     makerDeleteTransactionController,
     makerGetTransactionByUserIdController,
     makerUpdateTransactionController,
 } from './src/factories/controllers/transaction.js'
+import { usersRouter } from './src/routes/users.js'
 
 const app = express()
 
 app.use(express.json())
 
-app.post('/api/users', async (request, response) => {
-    const createUserController = makerCreateUserController()
-
-    const { statusCode, body } = await createUserController.execute(request)
-
-    /* outro jeito de fazer (Destructuring)
-    const responseObject = await createUserController.execute(request);
-
-    const statusCode = responseObject.statusCode;
-    const body = responseObject.body */
-
-    response.status(statusCode).send(body)
-})
-
-app.delete('/api/users/:userId', async (request, response) => {
-    const deleteUserController = makerDeleteUserController()
-
-    const { statusCode, body } = await deleteUserController.execute(request)
-
-    response.status(statusCode).send(body)
-})
+app.use('/api/users', usersRouter)
 
 app.delete('/api/transaction/:transactionId', async (request, response) => {
     const deleteTransactionController = makerDeleteTransactionController()
 
     const { statusCode, body } =
         await deleteTransactionController.execute(request)
-
-    response.status(statusCode).send(body)
-})
-
-app.patch('/api/users/:userId', async (request, response) => {
-    const updateUserController = makerUpdateUserController()
-
-    const { statusCode, body } = await updateUserController.execute(request)
 
     response.status(statusCode).send(body)
 })
@@ -66,27 +33,11 @@ app.patch('/api/transaction/:transactionId', async (request, response) => {
     response.status(statusCode).send(body)
 })
 
-app.get('/api/users/:userId', async (request, response) => {
-    const getUserByIdController = makerGetUserByIdController()
-
-    const { statusCode, body } = await getUserByIdController.execute(request)
-
-    response.status(statusCode).send(body)
-})
-
 app.get('/api/transaction', async (request, response) => {
     const getTransactionByIdController = makerGetTransactionByUserIdController()
 
     const { statusCode, body } =
         await getTransactionByIdController.execute(request)
-
-    response.status(statusCode).send(body)
-})
-
-app.get('/api/users/:userId/balance', async (request, response) => {
-    const getUserBalanceController = makerGetUserBalanceController()
-
-    const { statusCode, body } = await getUserBalanceController.execute(request)
 
     response.status(statusCode).send(body)
 })
