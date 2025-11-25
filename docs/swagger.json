@@ -1,113 +1,140 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "title": "FSC Finance App API",
-    "description": "API for FSC Finance App that allows users to manage their finances.",
-    "version": "1.0.0"
-  },
-  "basePath": "/",
-  "schemes": ["http"],
-  "paths": {
-    "/api/users": {
-      "post": {
-        "summary": "Create a new user",
-        "tags": ["Users"],
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/CreateUserParams"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "User created successfully",
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
-          },
-          "400": {
-            "description": "Invalid input"
-          }
-        }
-      }
+    "swagger": "2.0",
+    "info": {
+        "title": "FSC Finance App API",
+        "description": "API for FSC Finance App that allows users to manage their finances.",
+        "version": "1.0.0"
     },
-    "/api/users/{userId}": {
-      "get": {
-        "summary": "Get user by ID",
-        "tags": ["Users"],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "x-example": "8434d444-1731-4959-b2cd-203968337320"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User retrieved successfully",
-            "schema": {
-              "$ref": "#/definitions/User"
+    "basePath": "/",
+    "schemes": ["http"],
+    "paths": {
+        "/api/users": {
+            "post": {
+                "summary": "Create a new user",
+                "tags": ["Users"],
+                "parameters": [
+                    {
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateUserParams"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    }
+                }
             }
-          },
-          "404": {
-            "description": "User not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
+        },
+        "/api/users/{userId}": {
+            "get": {
+                "summary": "Get user by ID",
+                "tags": ["Users"],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "x-example": "8434d444-1731-4959-b2cd-203968337320"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User retrieved successfully",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete user by ID",
+                "tags": ["Users"],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "required": true,
+                        "type": "string",
+                        "description": "ID of the user to delete"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted successfully",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
         }
-      }
-    }
-  },
-  "definitions": {
-    "CreateUserParams": {
-      "type": "object",
-      "properties": {
-        "firstName": {
-          "type": "string",
-          "example": "John"
-        },
-        "lastName": {
-          "type": "string",
-          "example": "Doe"
-        },
-        "email": {
-          "type": "string",
-          "example": "john@doe.com"
-        },
-        "password": {
-          "type": "string",
-          "example": "strongpassword123"
-        }
-      },
-      "required": ["firstName", "lastName", "email", "password"]
     },
-    "User": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "example": "8434d444-1731-4959-b2cd-203968337320"
+    "definitions": {
+        "CreateUserParams": {
+            "type": "object",
+            "properties": {
+                "firstName": {
+                    "type": "string",
+                    "example": "John"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "john@doe.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "strongpassword123"
+                }
+            },
+            "required": ["firstName", "lastName", "email", "password"]
         },
-        "firstName": {
-          "type": "string",
-          "example": "John"
-        },
-        "lastName": {
-          "type": "string",
-          "example": "Doe"
-        },
-        "email": {
-          "type": "string",
-          "example": "john@doe.com"
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "8434d444-1731-4959-b2cd-203968337320"
+                },
+                "firstName": {
+                    "type": "string",
+                    "example": "John"
+                },
+                "lastName": {
+                    "type": "string",
+                    "example": "Doe"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "john@doe.com"
+                }
+            }
         }
-      }
     }
-  }
 }
