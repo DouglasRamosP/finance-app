@@ -28,15 +28,13 @@ export const transactionNotFoundResponse = () => {
 
 export const requiredFildIsMissingResponse = (field) => {
     // se o controller já mandar uma string, beleza
-    const missing = typeof field === 'string'
-        ? field
-        : field?.missingField ?? 'unknown'
+    const missing =
+        typeof field === 'string' ? field : (field?.missingField ?? 'unknown')
 
     return badRequest({
         message: `The field ${missing.toUpperCase()} is required.`,
     })
 }
-
 
 export const invalidAmountResponse = () => {
     return badRequest({

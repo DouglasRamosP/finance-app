@@ -1,8 +1,12 @@
-import { UserNotFoundError } from "../../errors/user.js"
+import { UserNotFoundError } from '../../errors/user.js'
 
 export class GetTransactionByUserIdUseCase {
-    constructor(postgresGetTransactionByUserIdRepository, postgresGetUserRepository) {
-        this.postgresGetTransactionByUserIdRepository = postgresGetTransactionByUserIdRepository
+    constructor(
+        postgresGetTransactionByUserIdRepository,
+        postgresGetUserRepository,
+    ) {
+        this.postgresGetTransactionByUserIdRepository =
+            postgresGetTransactionByUserIdRepository
         this.postgresGetUserRepository = postgresGetUserRepository
     }
     async execute(userId) {
@@ -10,10 +14,11 @@ export class GetTransactionByUserIdUseCase {
         const user = await this.postgresGetUserRepository.execute(userId)
 
         if (!user) {
-            throw new UserNotFoundError(userId)        
+            throw new UserNotFoundError(userId)
         }
         // Chamar Repository
-        const getTransaction = this.postgresGetTransactionByUserIdRepository.execute(userId)
+        const getTransaction =
+            this.postgresGetTransactionByUserIdRepository.execute(userId)
 
         return getTransaction
     }
