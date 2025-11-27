@@ -6,7 +6,7 @@
         "version": "1.0.0"
     },
     "basePath": "/",
-    "schemes": ["http", "https"],
+    "schemes": ["https"],
     "paths": {
         "/api/users": {
             "post": {
