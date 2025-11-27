@@ -1,169 +1,155 @@
 import { CreateUserController } from '../../src/controllers/user/create-user.js'
 import { EmailAlreadyInUseError } from '../../src/errors/user.js'
-import { user } from '../fixtures/user.js'
 
 describe('Create User Controller', () => {
-    class CreateUserUseCaseStub {
-        execute(user) {
-            return user
-        }
+  class CreateUserUseCaseStub {
+    execute(user) {
+      return user
     }
+  }
 
-    const makeSut = () => {
-        const createUserUseCase = new CreateUserUseCaseStub()
-        const sut = new CreateUserController(createUserUseCase)
+  const makeSut = () => {
+    const createUserUseCase = new CreateUserUseCaseStub()
+    const sut = new CreateUserController(createUserUseCase)
 
-        return { createUserUseCase, sut }
-    }
+    return { createUserUseCase, sut }
+  }
 
-    const httpRequest = {
-        body: {
-            ...user,
-            id: undefined,
-        },
-    }
+  // 👉 Entrada da API simulada: camelCase
+  const httpRequest = {
+    body: {
+      firstName: 'Edgardo',
+      lastName: 'Hermiston-Beahan',
+      email: 'edgardo@example.com',
+      password: 'fL0eUa8',
+    },
+  }
 
-    it('should return 201 when creating a user successfully', async () => {
-        //arrange
-        const { sut } = makeSut()
+  // 👉 O que o controller manda pro useCase/Zod: snake_case
+  const normalizedParams = {
+    first_name: 'Edgardo',
+    last_name: 'Hermiston-Beahan',
+    email: 'edgardo@example.com',
+    password: 'fL0eUa8',
+  }
 
-        // act
-        const result = await sut.execute(httpRequest)
+  it('should return 201 when creating a user successfully', async () => {
+    const { sut } = makeSut()
 
-        // assert
-        expect(result.statusCode).toBe(201)
-        expect(result.body).toEqual(httpRequest.body)
+    const result = await sut.execute(httpRequest)
+
+    expect(result.statusCode).toBe(201)
+    expect(result.body).toEqual(normalizedParams)
+  })
+
+  it('should return 400 if first_name is not provided', async () => {
+    const { sut } = makeSut()
+
+    const result = await sut.execute({
+      body: {
+        ...httpRequest.body,
+        firstName: undefined,
+      },
     })
 
-    it('should return 400 if first_name is not provided', async () => {
-        // arrange
-        const { sut } = makeSut()
+    expect(result.statusCode).toBe(400)
+  })
 
-        // act
-        const result = await sut.execute({
-            body: {
-                ...httpRequest,
-                first_name: undefined,
-            },
-        })
+  it('should return 400 if last_name is not provided', async () => {
+    const { sut } = makeSut()
 
-        // assert
-        expect(result.statusCode).toBe(400)
+    const result = await sut.execute({
+      body: {
+        ...httpRequest.body,
+        lastName: undefined,
+      },
     })
 
-    it('should return 400 if last_name is not provided', async () => {
-        // arrange
-        const { sut } = makeSut()
+    expect(result.statusCode).toBe(400)
+  })
 
-        // act
-        const result = await sut.execute({
-            body: {
-                ...httpRequest,
-                last_name: undefined,
-            },
-        })
+  it('should return 400 if email is not provided', async () => {
+    const { sut } = makeSut()
 
-        // assert
-        expect(result.statusCode).toBe(400)
+    const result = await sut.execute({
+      body: {
+        ...httpRequest.body,
+        email: undefined,
+      },
     })
 
-    it('should return 400 if email is not provided', async () => {
-        // arrange
-        const { sut } = makeSut()
+    expect(result.statusCode).toBe(400)
+  })
 
-        // act
-        const result = await sut.execute({
-            body: {
-                ...httpRequest,
-                email: undefined,
-            },
-        })
+  it('should return 400 if password is not provided', async () => {
+    const { sut } = makeSut()
 
-        // assert
-        expect(result.statusCode).toBe(400)
+    const result = await sut.execute({
+      body: {
+        ...httpRequest.body,
+        password: undefined,
+      },
     })
 
-    it('should return 400 if password is not provided', async () => {
-        // arrange
-        const { sut } = makeSut()
+    expect(result.statusCode).toBe(400)
+  })
 
-        // act
-        const result = await sut.execute({
-            body: {
-                ...httpRequest,
-                password: undefined,
-            },
-        })
+  it('should return 400 if email is not valid', async () => {
+    const { sut } = makeSut()
 
-        // assert
-        expect(result.statusCode).toBe(400)
+    const result = await sut.execute({
+      body: {
+        ...httpRequest.body,
+        email: 'invalid_email',
+      },
     })
 
-    it('should return 400 if email is not valid', async () => {
-        // arrange
-        const { sut } = makeSut()
+    expect(result.statusCode).toBe(400)
+  })
 
-        // act
-        const result = await sut.execute({
-            body: {
-                ...httpRequest,
-                email: 'invalid_email',
-            },
-        })
+  it('should return 400 if password is too short', async () => {
+    const { sut } = makeSut()
 
-        // assert
-        expect(result.statusCode).toBe(400)
+    const result = await sut.execute({
+      body: {
+        ...httpRequest.body,
+        password: '123',
+      },
     })
 
-    it('should return 400 if password is not valid', async () => {
-        // arrange
-        const { sut } = makeSut()
+    expect(result.statusCode).toBe(400)
+  })
 
-        // act
-        const result = await sut.execute({
-            body: {
-                ...httpRequest,
-                password: '123',
-            },
-        })
+  it('should call CreateUserUseCase with correct params', async () => {
+    const { sut, createUserUseCase } = makeSut()
+    const executeSpy = jest.spyOn(createUserUseCase, 'execute')
 
-        // assert
-        expect(result.statusCode).toBe(400)
+    await sut.execute(httpRequest)
+
+    expect(executeSpy).toHaveBeenCalledWith(normalizedParams)
+  })
+
+  it('should return 500 if CreateUserUseCase throws generic error', async () => {
+    const { sut, createUserUseCase } = makeSut()
+    jest.spyOn(createUserUseCase, 'execute').mockImplementationOnce(() => {
+      throw new Error()
     })
 
-    it('should call CreateUserUseCase with correct params', async () => {
-        //arrange
-        const { sut, createUserUseCase } = makeSut()
-        const executeSpy = jest.spyOn(createUserUseCase, 'execute')
+    const result = await sut.execute(httpRequest)
 
-        // act
-        await sut.execute(httpRequest)
+    expect(result.statusCode).toBe(500)
+  })
 
-        // assert
-        expect(executeSpy).toHaveBeenCalledWith(httpRequest.body)
-    })
+  it('should return 400 if CreateUserUseCase throws EmailAlreadyInUseError', async () => {
+    const { sut, createUserUseCase } = makeSut()
+    jest
+      .spyOn(createUserUseCase, 'execute')
+      .mockImplementationOnce(() => {
+        throw new EmailAlreadyInUseError(httpRequest.body.email)
+      })
 
-    it('should return 500 if CreateUserUseCase', async () => {
-        // arrange
-        const { sut, createUserUseCase } = makeSut()
-        jest.spyOn(createUserUseCase, 'execute').mockImplementationOnce(() => {
-            throw new Error()
-        })
-        // act
-        const result = await sut.execute(httpRequest)
-        // assert
-        expect(result.statusCode).toBe(500)
-    })
+    const result = await sut.execute(httpRequest)
 
-    it('should return 500 if CreateUserUseCase throws EmailAlreadyInUseError', async () => {
-        // arrange
-        const { sut, createUserUseCase } = makeSut()
-        jest.spyOn(createUserUseCase, 'execute').mockImplementationOnce(() => {
-            throw new EmailAlreadyInUseError(httpRequest.body.email)
-        })
-        // act
-        const result = await sut.execute(httpRequest)
-        // assert
-        expect(result.statusCode).toBe(400)
-    })
+    expect(result.statusCode).toBe(400)
+  })
 })

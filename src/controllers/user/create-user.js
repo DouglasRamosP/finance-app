@@ -9,42 +9,20 @@ export class CreateUserController {
 
     async execute(httpRequest) {
         try {
-            console.log('BODY =>', httpRequest.body)
-            const params = httpRequest.body
+            const body = httpRequest.body || {}
 
+            // 🔥 NORMALIZAÇÃO: camelCase → snake_case
+            const params = {
+                first_name: body.first_name ?? body.firstName,
+                last_name: body.last_name ?? body.lastName,
+                email: body.email,
+                password: body.password,
+            }
+
+            // 🔍 ZOD valida snake_case
             await createuserSchema.parseAsync(params)
 
-            /* ----- SEM O ZOD --------
-
-            const requiredFields = [
-                'first_name',
-                'last_name',
-                'email',
-                'password',
-            ]
-
-            const requiredFieldValidation = checkedRequiredFields(
-                params,
-                requiredFields,
-            )
-
-            if (!requiredFieldValidation.ok) {
-                return requiredFildIsMissingResponse(requiredFieldValidation)
-            }
-
-            const passworIsValid = checkPassworIsValid(params.password)
-
-            if (!passworIsValid) {
-                return generateInvalidPasswordResponse()
-            }
-
-            const emailIsValid = checkIfEmailIsValid(params.email)
-
-            if (!emailIsValid) {
-                return generateEmailAlreadyUseResponse()
-            }
-            */
-
+            // 🚀 useCase só recebe snake_case
             const createdUser = await this.createUserUseCase.execute(params)
 
             return created(createdUser)
