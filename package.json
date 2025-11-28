@@ -11,7 +11,7 @@
         "postinstall": "npx husky install && npx prisma generate",
         "start:dev": "node --watch index.js",
          "start": "node index.js",
-        "eslint:check": "eslint src/ --ext .js",
+        "eslint:check": "eslint src",
         "prettier:check": "prettier --check src"
     },
     "keywords": [],
@@ -24,7 +24,7 @@
         "@faker-js/faker": "^10.1.0",
         "babel-jest": "^30.2.0",
         "dotenv": "^17.2.3",
-        "eslint": "^8.46.0",
+        "eslint": "^9.39.1",
         "eslint-config-prettier": "^10.1.8",
         "git-commit-msg-linter": "^5.0.8",
         "husky": "^8.0.3",
