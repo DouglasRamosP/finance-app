@@ -8,7 +8,7 @@ export class PostgresDeleteTransactionRepository {
                     id: transactionId,
                 },
             })
-        } catch (error) {
+        } catch {
             return null
         }
     }

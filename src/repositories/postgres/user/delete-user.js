@@ -8,7 +8,7 @@ export class PostgresDeleteUserRepository {
                     id: userId,
                 },
             })
-        } catch (error) {
+        } catch {
             return null
         }
     }
