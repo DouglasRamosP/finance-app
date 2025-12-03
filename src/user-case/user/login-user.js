@@ -17,7 +17,7 @@ export class LoginUserUseCase {
             throw new UserNotFoundError()
         }
         // verificar se a senha informada corresponde com com a senha atrelada ao usuário dono do email informado.
-        const passwordIsValid = this.passwordComparatorAdapter.execute(
+        const passwordIsValid = await this.passwordComparatorAdapter.execute(
             password,
             user.password,
         )
