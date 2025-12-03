@@ -32,6 +32,8 @@ export const makerGetUserByIdController = () => {
 }
 
 export const makerCreateUserController = () => {
+    const tokensGeneratorAdapter = new TokensGeneratorAdapter()
+
     const idGeneratorAdapter = new IdGeneratorAdapter()
 
     const passwordHasherAdapter = new PasswordHasherAdapter()
@@ -46,6 +48,7 @@ export const makerCreateUserController = () => {
         postgresCreateUserRepository,
         passwordHasherAdapter,
         idGeneratorAdapter,
+        tokensGeneratorAdapter,
     )
 
     const createUserController = new CreateUserController(createUserUseCase)
