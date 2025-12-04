@@ -3,34 +3,59 @@ import { updateTransactionSchema } from '../../schemas/transaction.js'
 import { badRequest, ok, serverError } from '../helpers/http.js'
 import { generateInvalidIdResponse } from '../helpers/response.js'
 import { checkedIfIdIsValid } from '../helpers/validation.js'
+import {
+    TransactionNotFoundError,
+    UnauthorizedTransactionAccessError,
+} from '../../errors/transaction.js'
 
 export class UpdateTransactionController {
     constructor(updateTransactionUseCase) {
         this.updateTransactionUseCase = updateTransactionUseCase
     }
-    async execute(httpsRequest) {
+
+    async execute(httpRequest) {
         try {
-            // validar o ID da transaction
-            const transactionId = httpsRequest.params.transactionId
+            // 1) Validar o ID da transaction
+            const transactionId = httpRequest.params.transactionId
 
             const idIsValid = checkedIfIdIsValid(transactionId)
             if (!idIsValid) {
                 return generateInvalidIdResponse()
             }
 
-            const params = httpsRequest.body
+            // 2) Validar apenas os campos editáveis do body
+            const body = await updateTransactionSchema.parseAsync(
+                httpRequest.body,
+            )
 
-            await updateTransactionSchema.parseAsync(params)
+            // 3) Montar os parâmetros para o use case,
+            //    injetando o user_id vindo do token
+            const updateTransactionParams = {
+                ...body,
+                user_id: httpRequest.userId,
+            }
 
-            // chamar usecase
+            // 4) Chamar use case
             const updateTransaction =
                 await this.updateTransactionUseCase.execute(
                     transactionId,
-                    params,
+                    updateTransactionParams,
                 )
 
             return ok(updateTransaction)
         } catch (error) {
+            if (error instanceof TransactionNotFoundError) {
+                return badRequest({
+                    message: error.message,
+                })
+            }
+
+            if (error instanceof UnauthorizedTransactionAccessError) {
+                return badRequest({
+                    message: error.message,
+                })
+            }
+
             if (error instanceof ZodError) {
                 return badRequest({
                     message: error.issues[0].message,

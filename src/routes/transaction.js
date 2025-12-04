@@ -5,6 +5,7 @@ import {
     makerGetTransactionByUserIdController,
     makerUpdateTransactionController,
 } from '../factories/controllers//transaction.js'
+import { auth } from '../middleweres/auth.js'
 
 export const transactionsRouter = Router()
 
@@ -17,29 +18,42 @@ transactionsRouter.delete('/:transactionId', async (request, response) => {
     response.status(statusCode).send(body)
 })
 
-transactionsRouter.patch('/:transactionId', async (request, response) => {
+transactionsRouter.patch('/:transactionId', auth, async (request, response) => {
     const updateTransactionController = makerUpdateTransactionController()
 
-    const { statusCode, body } =
-        await updateTransactionController.execute(request)
+    const { statusCode, body } = await updateTransactionController.execute({
+        params: request.params,
+        body: request.body,
+        userId: request.userId,
+    })
 
     response.status(statusCode).send(body)
 })
 
-transactionsRouter.get('/', async (request, response) => {
+transactionsRouter.get('/', auth, async (request, response) => {
     const getTransactionByIdController = makerGetTransactionByUserIdController()
 
-    const { statusCode, body } =
-        await getTransactionByIdController.execute(request)
+    const { statusCode, body } = await getTransactionByIdController.execute({
+        ...request,
+        query: {
+            ...request.query,
+            userId: request.userId,
+        },
+    })
 
     response.status(statusCode).send(body)
 })
 
-transactionsRouter.post('/', async (request, response) => {
+transactionsRouter.post('/', auth, async (request, response) => {
     const createTransactionController = makerCreateTransactionController()
 
-    const { statusCode, body } =
-        await createTransactionController.execute(request)
+    const { statusCode, body } = await createTransactionController.execute({
+        ...request,
+        body: {
+            ...request.body,
+            user_id: request.userId,
+        },
+    })
 
     response.status(statusCode).send(body)
 })
