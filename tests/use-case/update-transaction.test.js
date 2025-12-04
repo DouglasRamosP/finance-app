@@ -3,8 +3,16 @@ import { UpdateTransactionUseCase } from '../../src/user-case/transaction/update
 import { transaction } from '../fixtures/transaction'
 
 describe('UpdateTransactionUseCase', () => {
+    class GetTransactionByIdRepositoryStub {
+        async execute() {
+            // simula uma transaction encontrada no banco
+            return transaction
+        }
+    }
+
     class UpdateTransactionRepositoryStub {
         async execute() {
+            // simula a transaction atualizada retornada pelo banco
             return transaction
         }
     }
@@ -12,11 +20,18 @@ describe('UpdateTransactionUseCase', () => {
     const makeSut = () => {
         const updateTransactionRepository =
             new UpdateTransactionRepositoryStub()
-        const sut = new UpdateTransactionUseCase(updateTransactionRepository)
+        const getTransactionByIdRepository =
+            new GetTransactionByIdRepositoryStub()
+
+        const sut = new UpdateTransactionUseCase(
+            updateTransactionRepository,
+            getTransactionByIdRepository,
+        )
 
         return {
             sut,
             updateTransactionRepository,
+            getTransactionByIdRepository,
         }
     }
 
@@ -24,10 +39,13 @@ describe('UpdateTransactionUseCase', () => {
         // arrange
         const { sut } = makeSut()
 
-        // act
-        const result = await sut.execute(transaction.id, {
+        const params = {
             amount: Number(faker.finance.amount()),
-        })
+            user_id: transaction.user_id, // precisa bater com o fixture
+        }
+
+        // act
+        const result = await sut.execute(transaction.id, params)
 
         // assert
         expect(result).toEqual(transaction)
@@ -41,17 +59,18 @@ describe('UpdateTransactionUseCase', () => {
             'execute',
         )
 
-        // act
-        await sut.execute(transaction.id, {
+        const params = {
             amount: transaction.amount,
-        })
+            user_id: transaction.user_id, // mesmo user do fixture
+        }
+
+        // act
+        await sut.execute(transaction.id, params)
 
         // assert
         expect(updateTransactionRepositorySpy).toHaveBeenCalledWith(
             transaction.id,
-            {
-                amount: transaction.amount,
-            },
+            params,
         )
     })
 
@@ -63,10 +82,13 @@ describe('UpdateTransactionUseCase', () => {
             'execute',
         ).mockRejectedValueOnce(new Error())
 
-        // act
-        const promise = sut.execute(transaction.id, {
+        const params = {
             amount: transaction.amount,
-        })
+            user_id: transaction.user_id,
+        }
+
+        // act
+        const promise = sut.execute(transaction.id, params)
 
         // assert
         await expect(promise).rejects.toThrow()
