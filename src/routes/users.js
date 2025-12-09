@@ -6,6 +6,7 @@ import {
     makerUpdateUserController,
     makerGetUserBalanceController,
     makerLoginUserController,
+    makerRefreshTokenController,
 } from '../factories/controllers/user.js'
 import { auth } from '../middleweres/auth.js'
 
@@ -75,6 +76,14 @@ usersRouter.post('/login', async (request, response) => {
     const loginUserController = makerLoginUserController()
 
     const { statusCode, body } = await loginUserController.execute(request)
+
+    response.status(statusCode).send(body)
+})
+
+usersRouter.post('/refresh-token', async (request, response) => {
+    const refreshTokenController = makerRefreshTokenController()
+
+    const { statusCode, body } = await refreshTokenController.execute(request)
 
     response.status(statusCode).send(body)
 })

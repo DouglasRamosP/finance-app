@@ -1,4 +1,6 @@
+import { ZodError } from 'zod'
 import { UnauthorizedError } from '../../errors/user.js'
+import { refreshTokenSchema } from '../../schemas/user.js'
 import { ok, badRequest, serverError, unauthorized } from '../helpers/http.js'
 
 export class RefreshTokenController {
@@ -6,9 +8,10 @@ export class RefreshTokenController {
         this.refreshTokenUseCase = refreshTokenUseCase
     }
 
-    execute(httpRequest) {
+    async execute(httpRequest) {
         try {
             const { refreshToken } = httpRequest.body ?? {}
+            await refreshTokenSchema.parseAsync(httpRequest.body)
 
             // validação pra bater com o teste:
             // - se não existir
@@ -21,12 +24,15 @@ export class RefreshTokenController {
 
             return ok(tokens)
         } catch (error) {
-            console.error(error)
-
-            if (error instanceof UnauthorizedError) {
-                return unauthorized({ message: 'Unauthorized' })
+            if (error instanceof ZodError) {
+                return badRequest(error)
             }
 
+            if (error instanceof UnauthorizedError) {
+                return unauthorized({ message: error.message })
+            }
+
+            console.error(error)
             return serverError()
         }
     }
