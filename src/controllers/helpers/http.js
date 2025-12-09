@@ -34,3 +34,10 @@ export const notFound = (body) => {
         body,
     }
 }
+
+export const unauthorized = (body) => {
+    return {
+        statusCode: 401,
+        body,
+    }
+}
