@@ -4,6 +4,8 @@ import { UserNotFoundError } from '../../src/errors/user'
 import { transaction } from '../fixtures/transaction'
 
 describe('GetTransactionController', () => {
+    const from = '2024-01-01'
+    const to = '2024-12-31'
     class GetTransactionUseCaseStub {
         async execute() {
             return transaction
@@ -20,6 +22,8 @@ describe('GetTransactionController', () => {
     const httpRequest = {
         query: {
             userId: faker.string.uuid(),
+            from: '2024-01-01',
+            to: '2024-12-31',
         },
     }
 
@@ -94,6 +98,8 @@ describe('GetTransactionController', () => {
         await sut.execute({
             query: {
                 userId,
+                from,
+                to,
             },
         })
         // assert
