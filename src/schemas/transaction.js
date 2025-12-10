@@ -26,3 +26,19 @@ export const updateTransactionSchema = createTransactionSchema
     .omit({ user_id: true })
     .partial()
     .strict({ message: 'some provided field is not allowed' })
+
+export const getTransactionByUserIdSchema = z.object({
+    user_id: z.string().uuid(),
+    from: z
+        .string()
+        .regex(
+            /^\d{4}-\d{2}-\d{2}$/,
+            'Invalid date format (expected YYYY-MM-DD)',
+        ),
+    to: z
+        .string()
+        .regex(
+            /^\d{4}-\d{2}-\d{2}$/,
+            'Invalid date format (expected YYYY-MM-DD)',
+        ),
+})

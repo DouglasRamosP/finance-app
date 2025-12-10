@@ -1,12 +1,8 @@
+import { ZodError } from 'zod'
 import { UserNotFoundError } from '../../errors/user.js'
-import { ok, serverError } from '../helpers/http.js'
-import {
-    generateInvalidIdResponse,
-    requiredFildIsMissingResponse,
-    userNotFoundResponse,
-} from '../helpers/response.js'
-
-import { checkedIfIdIsValid } from '../helpers/validation.js'
+import { getTransactionByUserIdSchema } from '../../schemas/transaction.js'
+import { badRequest, ok, serverError } from '../helpers/http.js'
+import { userNotFoundResponse } from '../helpers/response.js'
 
 export class GetTransactionByUserIdController {
     constructor(getTransactionByUserIdUseCase) {
@@ -16,14 +12,14 @@ export class GetTransactionByUserIdController {
         try {
             // Verificar se o userId foi passado como parametro
             const userId = httpRequest.query.userId
-            if (!userId) {
-                return requiredFildIsMissingResponse(userId)
-            }
-            // Verificar se o userId é um ID válido
-            const userIdIsValid = checkedIfIdIsValid(userId)
-            if (!userIdIsValid) {
-                return generateInvalidIdResponse()
-            }
+            const from = httpRequest.query.from
+            const to = httpRequest.query.to
+
+            await getTransactionByUserIdSchema.parseAsync({
+                user_id: userId,
+                from,
+                to,
+            })
             // Chamar Use Case
             const getTransaction =
                 await this.getTransactionByUserIdUseCase.execute(userId)
@@ -32,9 +28,15 @@ export class GetTransactionByUserIdController {
             // retomar resposta http
         } catch (error) {
             console.error(error)
+
+            if (error instanceof ZodError) {
+                return badRequest(error)
+            }
+
             if (error instanceof UserNotFoundError) {
                 return userNotFoundResponse()
             }
+
             return serverError()
         }
     }
