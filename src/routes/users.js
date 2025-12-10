@@ -26,7 +26,7 @@ usersRouter.post('/', async (request, response) => {
     response.status(statusCode).send(body)
 })
 
-usersRouter.delete('/:userId', auth, async (request, response) => {
+usersRouter.delete('/me', auth, async (request, response) => {
     const deleteUserController = makerDeleteUserController()
 
     const { statusCode, body } = await deleteUserController.execute({
@@ -37,7 +37,7 @@ usersRouter.delete('/:userId', auth, async (request, response) => {
     response.status(statusCode).send(body)
 })
 
-usersRouter.patch('/:userId', auth, async (request, response) => {
+usersRouter.patch('/me', auth, async (request, response) => {
     const updateUserController = makerUpdateUserController()
 
     const { statusCode, body } = await updateUserController.execute({
@@ -48,7 +48,7 @@ usersRouter.patch('/:userId', auth, async (request, response) => {
     response.status(statusCode).send(body)
 })
 
-usersRouter.get('/', auth, async (request, response) => {
+usersRouter.get('/me', auth, async (request, response) => {
     const getUserByIdController = makerGetUserByIdController()
 
     console.log('Usuário autenticado:', request.userId)
@@ -61,7 +61,7 @@ usersRouter.get('/', auth, async (request, response) => {
     response.status(statusCode).send(body)
 })
 
-usersRouter.get('/balance', auth, async (request, response) => {
+usersRouter.get('/me/balance', auth, async (request, response) => {
     const getUserBalanceController = makerGetUserBalanceController()
 
     const { statusCode, body } = await getUserBalanceController.execute({
