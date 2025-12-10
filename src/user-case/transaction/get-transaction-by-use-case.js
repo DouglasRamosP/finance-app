@@ -9,7 +9,7 @@ export class GetTransactionByUserIdUseCase {
             postgresGetTransactionByUserIdRepository
         this.postgresGetUserRepository = postgresGetUserRepository
     }
-    async execute(userId) {
+    async execute(userId, from, to) {
         // Checar se o usuário existe
         const user = await this.postgresGetUserRepository.execute(userId)
 
@@ -18,7 +18,11 @@ export class GetTransactionByUserIdUseCase {
         }
         // Chamar Repository
         const getTransaction =
-            this.postgresGetTransactionByUserIdRepository.execute(userId)
+            this.postgresGetTransactionByUserIdRepository.execute(
+                userId,
+                from,
+                to,
+            )
 
         return getTransaction
     }
