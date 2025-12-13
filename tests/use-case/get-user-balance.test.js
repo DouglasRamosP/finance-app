@@ -44,11 +44,14 @@ describe('GetBalanceUseCase', () => {
         const { sut } = makeSut()
 
         // act
-        const result = await sut.execute(faker.string.uuid())
+        const result = await sut.execute(faker.string.uuid(), from, to)
 
         // assert
         expect(result).toEqual(userBalance)
     })
+
+    const from = '2023-01-01'
+    const to = '2023-12-31'
 
     it('should throw UserNotFoundError if GetUserByIdRepository returns null', async () => {
         // arrange
@@ -57,7 +60,7 @@ describe('GetBalanceUseCase', () => {
         const userId = faker.string.uuid()
 
         // act
-        const promise = sut.execute(userId)
+        const promise = sut.execute(userId, from, to)
 
         // assert
         await expect(promise).rejects.toThrow(new UserNotFoundError(userId))
@@ -73,7 +76,7 @@ describe('GetBalanceUseCase', () => {
         )
 
         // act
-        await sut.execute(userId)
+        await sut.execute(userId, from, to)
 
         // assert
         expect(getUserByIdRepositorySpy).toHaveBeenCalledWith(userId)
@@ -86,10 +89,10 @@ describe('GetBalanceUseCase', () => {
         const executeSpy = jest.spyOn(getUserBalanceRepository, 'execute')
 
         // act
-        await sut.execute(userId)
+        await sut.execute(userId, from, to)
 
         // assert
-        expect(executeSpy).toHaveBeenCalledWith(userId)
+        expect(executeSpy).toHaveBeenCalledWith(userId, from, to)
     })
 
     it('should throw if GetUserByIdRepository throws', async () => {
@@ -100,7 +103,7 @@ describe('GetBalanceUseCase', () => {
         )
 
         // act
-        const promise = sut.execute(faker.string.uuid())
+        const promise = sut.execute(faker.string.uuid(), from, to)
 
         // assert
         await expect(promise).rejects.toThrow()
@@ -114,7 +117,7 @@ describe('GetBalanceUseCase', () => {
         )
 
         // act
-        const promise = sut.execute(faker.string.uuid())
+        const promise = sut.execute(faker.string.uuid(), from, to)
 
         // assert
         await expect(promise).rejects.toThrow()
