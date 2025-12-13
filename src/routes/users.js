@@ -56,6 +56,10 @@ usersRouter.get('/me', auth, async (request, response) => {
     const { statusCode, body } = await getUserByIdController.execute({
         ...request,
         params: { userId: request.userId },
+        query: {
+            from: request.query.from,
+            to: request.query.to,
+        },
     })
 
     response.status(statusCode).send(body)
