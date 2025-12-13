@@ -5,15 +5,18 @@ export class GetUserBalanceUseCase {
         this.postgresGetUserBalanceRepository = postgresGetUserBalanceRepository
         this.getUserByIdUseCase = getUserByIdUseCase
     }
-    async execute(userId) {
+    async execute(userId, from, to) {
         const userIdIsValid = await this.getUserByIdUseCase.execute(userId)
 
         if (!userIdIsValid) {
             throw new UserNotFoundError(userId)
         }
 
-        const userBalance =
-            await this.postgresGetUserBalanceRepository.execute(userId)
+        const userBalance = await this.postgresGetUserBalanceRepository.execute(
+            userId,
+            from,
+            to,
+        )
 
         return userBalance
     }
