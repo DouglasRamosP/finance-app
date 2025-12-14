@@ -15,8 +15,12 @@ transactionsRouter.delete(
     async (request, response) => {
         const deleteTransactionController = makerDeleteTransactionController()
 
-        const { statusCode, body } =
-            await deleteTransactionController.execute(request)
+        const { statusCode, body } = await deleteTransactionController.execute({
+            params: {
+                transactionId: request.params.transactionId,
+                userId: request.userId,
+            },
+        })
 
         response.status(statusCode).send(body)
     },
