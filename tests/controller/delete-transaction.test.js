@@ -73,13 +73,15 @@ describe('Delete Transaction Controller', () => {
         const executeSpy = jest.spyOn(deletetransactionUseCase, 'execute')
 
         const transactionId = faker.string.uuid()
+        const userId = faker.string.uuid()
         // act
         await sut.execute({
             params: {
                 transactionId,
+                userId,
             },
         })
         // assert
-        expect(executeSpy).toHaveBeenCalledWith(transactionId)
+        expect(executeSpy).toHaveBeenCalledWith(transactionId, userId)
     })
 })
