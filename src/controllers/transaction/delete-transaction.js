@@ -14,6 +14,11 @@ export class DeleteTransactionController {
             const transactionId = httpRequest.params.transactionId
 
             const idIsValid = checkedIfIdIsValid(transactionId)
+            const userIdIsValid = checkedIfIdIsValid(httpRequest.params.userId)
+
+            if (!userIdIsValid) {
+                return generateInvalidIdResponse()
+            }
 
             if (!idIsValid) {
                 return generateInvalidIdResponse()
