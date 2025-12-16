@@ -41,7 +41,7 @@ Crie um arquivo `.env` na raiz do projeto (ou use `.env.development` se você ro
 
 ```env
 PORT=3000
-DATABASE_URL="postgresql://drpimenta:tm4A<O<A@localhost:5432/financeapp?schema=public"
+DATABASE_URL="postgresql://user:senha@localhost:5432/financeapp?schema=public"
 
 JWT_ACCESS_TOKEN_SECRET="coloque-um-segredo-forte-aqui"
 JWT_REFRESH_TOKEN_SECRET="coloque-outro-segredo-forte-aqui"
