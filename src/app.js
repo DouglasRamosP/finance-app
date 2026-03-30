@@ -1,21 +1,9 @@
 import express from 'express'
 import { usersRouter } from './routes/users.js'
 import { transactionsRouter } from './routes/transaction.js'
-import swaggerUi from 'swagger-ui-express'
-import { createRequire } from 'module'
+import swaggerDocument from '../docs/swagger.json' with { type: 'json' }
 
 export const app = express()
-
-const require = createRequire(import.meta.url)
-
-const loadSwaggerDocument = () => {
-    try {
-        return require('../docs/swagger.json')
-    } catch (error) {
-        console.warn('Swagger docs unavailable:', error.message)
-        return null
-    }
-}
 
 const allowedOrigins = (
     process.env.CORS_ALLOWED_ORIGINS ?? 'http://localhost:5173'
@@ -53,16 +41,43 @@ app.use(express.json())
 app.use('/api/users', usersRouter)
 app.use('/api/transaction', transactionsRouter)
 
-const swaggerDocument = loadSwaggerDocument()
+const swaggerHtml = `
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Finance App API Docs</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        background: #fafafa;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script>
+      window.ui = SwaggerUIBundle({
+        url: '/docs/swagger.json',
+        dom_id: '#swagger-ui',
+      })
+    </script>
+  </body>
+</html>
+`
 
-if (swaggerDocument) {
-    app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-} else {
-    app.get('/docs', (_request, response) => {
-        response.status(503).send({
-            error: 'Swagger documentation is unavailable in this environment',
-        })
-    })
-}
+app.get(['/docs', '/docs/'], (_request, response) => {
+    response.type('html').send(swaggerHtml)
+})
+
+app.get('/docs/swagger.json', (_request, response) => {
+    response.json(swaggerDocument)
+})
 
 export default app
