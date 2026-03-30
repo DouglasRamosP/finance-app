@@ -2,19 +2,15 @@ import express from 'express'
 import { usersRouter } from './routes/users.js'
 import { transactionsRouter } from './routes/transaction.js'
 import swaggerUi from 'swagger-ui-express'
-import fs from 'fs'
-import path from 'path'
+import { createRequire } from 'module'
 
 export const app = express()
 
+const require = createRequire(import.meta.url)
+
 const loadSwaggerDocument = () => {
     try {
-        const swaggerPath = path.join(
-            import.meta.dirname,
-            '../docs/swagger.json',
-        )
-
-        return JSON.parse(fs.readFileSync(swaggerPath, 'utf8'))
+        return require('../docs/swagger.json')
     } catch (error) {
         console.warn('Swagger docs unavailable:', error.message)
         return null
@@ -68,3 +64,5 @@ if (swaggerDocument) {
         })
     })
 }
+
+export default app
