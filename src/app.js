@@ -7,6 +7,20 @@ import path from 'path'
 
 export const app = express()
 
+const loadSwaggerDocument = () => {
+    try {
+        const swaggerPath = path.join(
+            import.meta.dirname,
+            '../docs/swagger.json',
+        )
+
+        return JSON.parse(fs.readFileSync(swaggerPath, 'utf8'))
+    } catch (error) {
+        console.warn('Swagger docs unavailable:', error.message)
+        return null
+    }
+}
+
 const allowedOrigins = (
     process.env.CORS_ALLOWED_ORIGINS ?? 'http://localhost:5173'
 )
@@ -43,11 +57,14 @@ app.use(express.json())
 app.use('/api/users', usersRouter)
 app.use('/api/transaction', transactionsRouter)
 
-const swaggerDocument = JSON.parse(
-    fs.readFileSync(
-        path.join(import.meta.dirname, '../docs/swagger.json'),
-        'utf8',
-    ),
-)
+const swaggerDocument = loadSwaggerDocument()
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+if (swaggerDocument) {
+    app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+} else {
+    app.get('/docs', (_request, response) => {
+        response.status(503).send({
+            error: 'Swagger documentation is unavailable in this environment',
+        })
+    })
+}
