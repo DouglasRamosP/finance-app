@@ -18,11 +18,14 @@ export const auth = (request, response, next) => {
             return response.status(401).send({ error: 'Unauthorized' })
         }
 
+        if (!decodedToken?.userId || typeof decodedToken.userId !== 'string') {
+            return response.status(401).send({ error: 'Unauthorized' })
+        }
+
         request.userId = decodedToken.userId
         // se for válido, chamar o next()
         next()
-    } catch (error) {
-        console.error(error)
+    } catch {
         return response.status(401).send({ error: 'Unauthorized' })
     }
 }

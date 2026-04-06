@@ -7,16 +7,26 @@ export class RefreshTokenUseCase {
     }
 
     execute(refreshToken) {
-        // verificar o tokken de refresh (se é valido, expirado, etc)
+        // verificar o token de refresh (se é válido, expirado, etc)
         try {
             const decodedToken = this.tokenVerifierAdapter.execute(
                 refreshToken,
                 process.env.JWT_REFRESH_TOKEN_SECRET,
             )
 
+            if (
+                !decodedToken?.userId ||
+                typeof decodedToken.userId !== 'string'
+            ) {
+                throw new UnauthorizedError()
+            }
+
             return this.tokenGeneratorAdapter.execute(decodedToken.userId)
         } catch (error) {
-            console.error(error)
+            if (error instanceof UnauthorizedError) {
+                throw error
+            }
+
             throw new UnauthorizedError()
         }
     }
