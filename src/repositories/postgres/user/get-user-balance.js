@@ -1,8 +1,12 @@
 import { Decimal } from '@prisma/client/runtime/library'
 import { prisma } from '../../../../prisma/prisma.js'
+import { buildInclusiveDateRange } from '../../../utils/date-range.js'
+import { serializeBalance } from '../../../utils/serialize-balance.js'
 
 export class PostgresGetUserBalanceRepository {
     async execute(userId, from, to) {
+        const dateRange = buildInclusiveDateRange(from, to)
+
         const [
             {
                 _sum: { amount: totalExpenses },
@@ -18,7 +22,7 @@ export class PostgresGetUserBalanceRepository {
                 where: {
                     user_id: userId,
                     type: 'EXPENSES',
-                    date: { gte: from, lte: to },
+                    date: dateRange,
                 },
                 _sum: { amount: true },
             }),
@@ -26,7 +30,7 @@ export class PostgresGetUserBalanceRepository {
                 where: {
                     user_id: userId,
                     type: 'EARNINGS',
-                    date: { gte: from, lte: to },
+                    date: dateRange,
                 },
                 _sum: { amount: true },
             }),
@@ -34,7 +38,7 @@ export class PostgresGetUserBalanceRepository {
                 where: {
                     user_id: userId,
                     type: 'INVESTMENTS',
-                    date: { gte: from, lte: to },
+                    date: dateRange,
                 },
                 _sum: { amount: true },
             }),
@@ -64,7 +68,7 @@ export class PostgresGetUserBalanceRepository {
             ? 0
             : _totalInvestments.dividedBy(total).times(100).toNumber()
 
-        return {
+        return serializeBalance({
             earnings: _totalEarnings,
             expenses: _totalExpenses,
             investments: _totalInvestments,
@@ -72,6 +76,6 @@ export class PostgresGetUserBalanceRepository {
             expensesPercentage,
             investmentsPercentage,
             balance,
-        }
+        })
     }
 }

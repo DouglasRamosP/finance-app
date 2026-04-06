@@ -3,6 +3,7 @@ import { UserNotFoundError } from '../../errors/user.js'
 import { getUserBalanceSchema } from '../../schemas/user.js'
 import { badRequest, ok, serverError } from '../helpers/http.js'
 import { userNotFoundResponse } from '../helpers/response.js'
+import { serializeBalance } from '../../utils/serialize-balance.js'
 
 export class GetUserBalanceController {
     constructor(getUserBalanceUseCase) {
@@ -30,9 +31,8 @@ export class GetUserBalanceController {
                 to,
             )
 
-            return ok(userBalance)
+            return ok(serializeBalance(userBalance))
         } catch (error) {
-            console.error(error)
             if (error instanceof UserNotFoundError) {
                 return userNotFoundResponse()
             }
@@ -40,6 +40,7 @@ export class GetUserBalanceController {
                 return badRequest({ message: error.issues[0].message })
             }
 
+            console.error(error)
             return serverError()
         }
     }

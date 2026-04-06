@@ -1,5 +1,7 @@
 import { z } from 'zod'
 
+const dateRangeRefinement = ({ from, to }) => from <= to
+
 export const createuserSchema = z.object({
     first_name: z.string().trim().min(1),
     last_name: z.string().trim().min(1),
@@ -31,8 +33,13 @@ export const refreshTokenSchema = z.object({
         .min(1, { message: 'Refresh token is required' }),
 })
 
-export const getUserBalanceSchema = z.object({
-    user_id: z.string().uuid(),
-    from: z.coerce.date(),
-    to: z.coerce.date(),
-})
+export const getUserBalanceSchema = z
+    .object({
+        user_id: z.string().uuid(),
+        from: z.coerce.date(),
+        to: z.coerce.date(),
+    })
+    .refine(dateRangeRefinement, {
+        message: '"from" must be before or equal to "to".',
+        path: ['to'],
+    })
