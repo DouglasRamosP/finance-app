@@ -1,40 +1,12 @@
 import express from 'express'
 import { usersRouter } from './routes/users.js'
 import { transactionsRouter } from './routes/transaction.js'
+import { cors } from './middleweres/cors.js'
 import swaggerDocument from '../docs/swagger.json' with { type: 'json' }
 
 export const app = express()
 
-const allowedOrigins = (
-    process.env.CORS_ALLOWED_ORIGINS ?? 'http://localhost:5173'
-)
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter(Boolean)
-
-app.use((request, response, next) => {
-    const origin = request.headers.origin
-
-    if (origin && allowedOrigins.includes(origin)) {
-        response.setHeader('Access-Control-Allow-Origin', origin)
-        response.setHeader('Vary', 'Origin')
-    }
-
-    response.setHeader(
-        'Access-Control-Allow-Methods',
-        'GET,POST,PATCH,DELETE,OPTIONS',
-    )
-    response.setHeader(
-        'Access-Control-Allow-Headers',
-        'Content-Type, Authorization',
-    )
-
-    if (request.method === 'OPTIONS') {
-        return response.sendStatus(204)
-    }
-
-    next()
-})
+app.use(cors)
 
 app.use(express.json())
 
