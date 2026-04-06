@@ -14,9 +14,9 @@ Base URL: `/api`
 
 ## Transactions
 
-- `POST /transaction/me` — cria transação (Bearer)
-- `GET /transaction/me?from=YYYY-MM-DD&to=YYYY-MM-DD` — lista transações no intervalo (Bearer)
-- `PATCH /transaction/me/:transactionId` — atualiza transação (Bearer)
-- `DELETE /transaction/me/:transactionId` — remove transação (Bearer)
+- `POST /transactions/me` — cria transação (Bearer)
+- `GET /transactions/me?from=YYYY-MM-DD&to=YYYY-MM-DD` — lista transações no intervalo (Bearer)
+- `PATCH /transactions/me/:id` — atualiza transação (Bearer)
+- `DELETE /transactions/me/:id` — remove transação (Bearer)
 
 > Para detalhes completos (schemas, exemplos e respostas), use o Swagger em `GET /docs`.
