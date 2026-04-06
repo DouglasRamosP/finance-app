@@ -20,7 +20,7 @@ export class RefreshTokenController {
                 return badRequest({ message: 'Invalid refresh token' })
             }
 
-            const tokens = this.refreshTokenUseCase.execute(refreshToken)
+            const tokens = await this.refreshTokenUseCase.execute(refreshToken)
 
             return ok(tokens)
         } catch (error) {

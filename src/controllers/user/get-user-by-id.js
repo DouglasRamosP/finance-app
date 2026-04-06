@@ -1,6 +1,7 @@
 import { serverError, ok, notFound } from '../helpers/http.js'
 import { generateInvalidIdResponse } from '../helpers/response.js'
 import { checkedIfIdIsValid } from '../helpers/validation.js'
+import { serializePublicUser } from '../../utils/serialize-user.js'
 
 export class GetUserByIdController {
     constructor(getUserByIdUseCase) {
@@ -22,7 +23,7 @@ export class GetUserByIdController {
                 return notFound({ message: 'User not found.' })
             }
 
-            return ok(user)
+            return ok(serializePublicUser(user))
         } catch (error) {
             console.error(error)
             return serverError()

@@ -51,15 +51,8 @@ usersRouter.patch('/me', auth, async (request, response) => {
 usersRouter.get('/me', auth, async (request, response) => {
     const getUserByIdController = makerGetUserByIdController()
 
-    console.log('Usuário autenticado:', request.userId)
-
     const { statusCode, body } = await getUserByIdController.execute({
-        ...request,
         params: { userId: request.userId },
-        query: {
-            from: request.query.from,
-            to: request.query.to,
-        },
     })
 
     response.status(statusCode).send(body)
@@ -69,8 +62,8 @@ usersRouter.get('/me/balance', auth, async (request, response) => {
     const getUserBalanceController = makerGetUserBalanceController()
 
     const { statusCode, body } = await getUserBalanceController.execute({
-        ...request,
         params: { userId: request.userId },
+        query: request.query,
     })
 
     response.status(statusCode).send(body)
