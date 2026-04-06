@@ -11,12 +11,12 @@ export class CreateTransactionController {
     }
     async execute(httpRequest) {
         try {
-            const params = httpRequest.body
-
-            await createTransactionSchema.parseAsync(params)
+            const parsedParams = await createTransactionSchema.parseAsync(
+                httpRequest.body,
+            )
 
             const transaction =
-                await this.createTransactionUseCase.execute(params)
+                await this.createTransactionUseCase.execute(parsedParams)
 
             return created(serializeTransaction(transaction))
         } catch (error) {

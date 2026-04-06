@@ -110,6 +110,32 @@ describe('Create Transaction Controller', () => {
         // act
         await sut.execute(httpRequest)
         // assert
-        expect(executeSpy).toHaveBeenCalledWith(httpRequest.body)
+        expect(executeSpy).toHaveBeenCalledWith({
+            ...httpRequest.body,
+            date: expect.any(Date),
+        })
+    })
+
+    it('should pass coerced values to the use case', async () => {
+        const { sut, createTransactionUseCase } = makeSut()
+        const executeSpy = jest.spyOn(createTransactionUseCase, 'execute')
+
+        await sut.execute({
+            body: {
+                user_id: faker.string.uuid(),
+                name: 'Teste Front Int',
+                date: '2026-04-06',
+                amount: '123',
+                type: 'EARNINGS',
+            },
+        })
+
+        expect(executeSpy).toHaveBeenCalledWith({
+            user_id: expect.any(String),
+            name: 'Teste Front Int',
+            date: expect.any(Date),
+            amount: 123,
+            type: 'EARNINGS',
+        })
     })
 })
