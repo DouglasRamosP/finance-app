@@ -1,3 +1,8 @@
+import {
+    TransactionNotFoundError,
+    UnauthorizedTransactionAccessError,
+} from '../../errors/transaction.js'
+
 export class DeleteTransactionUseCase {
     constructor(
         postgresDeleteTransactionRepository,
@@ -8,17 +13,15 @@ export class DeleteTransactionUseCase {
         this.getTransactionByIdRepository = getTransactionByIdRepository
     }
     async execute(transactionId, userId) {
-        const transaction = await this.getTransactionByIdRepository.execute(
-            transactionId,
-            userId,
-        )
+        const transaction =
+            await this.getTransactionByIdRepository.execute(transactionId)
 
         if (!transaction) {
-            throw new Error('Transaction not found')
+            throw new TransactionNotFoundError(transactionId)
         }
 
         if (transaction.user_id !== userId) {
-            throw new Error('Unauthorized')
+            throw new UnauthorizedTransactionAccessError()
         }
 
         const deleteTransaction =

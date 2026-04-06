@@ -12,6 +12,7 @@ describe('UpdateTransactionController', () => {
     // verificar necessidade destas declarações
     const httpRequest = {
         params: { transactionId: faker.string.uuid() },
+        userId: transaction.user_id,
         body: {
             name: faker.person.firstName(),
         },
@@ -102,7 +103,10 @@ describe('UpdateTransactionController', () => {
         // assert
         expect(executeSpy).toHaveBeenCalledWith(
             httpRequest.params.transactionId,
-            httpRequest.body,
+            {
+                ...httpRequest.body,
+                user_id: httpRequest.userId,
+            },
         )
     })
 })

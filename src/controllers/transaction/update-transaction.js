@@ -1,12 +1,16 @@
 import { ZodError } from 'zod'
 import { updateTransactionSchema } from '../../schemas/transaction.js'
-import { badRequest, ok, serverError } from '../helpers/http.js'
-import { generateInvalidIdResponse } from '../helpers/response.js'
+import { badRequest, forbidden, ok, serverError } from '../helpers/http.js'
+import {
+    generateInvalidIdResponse,
+    transactionNotFoundResponse,
+} from '../helpers/response.js'
 import { checkedIfIdIsValid } from '../helpers/validation.js'
 import {
     TransactionNotFoundError,
     UnauthorizedTransactionAccessError,
 } from '../../errors/transaction.js'
+import { serializeTransaction } from '../../utils/serialize-transaction.js'
 
 export class UpdateTransactionController {
     constructor(updateTransactionUseCase) {
@@ -42,16 +46,14 @@ export class UpdateTransactionController {
                     updateTransactionParams,
                 )
 
-            return ok(updateTransaction)
+            return ok(serializeTransaction(updateTransaction))
         } catch (error) {
             if (error instanceof TransactionNotFoundError) {
-                return badRequest({
-                    message: error.message,
-                })
+                return transactionNotFoundResponse()
             }
 
             if (error instanceof UnauthorizedTransactionAccessError) {
-                return badRequest({
+                return forbidden({
                     message: error.message,
                 })
             }

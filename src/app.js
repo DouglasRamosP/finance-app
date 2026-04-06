@@ -39,6 +39,7 @@ app.use((request, response, next) => {
 app.use(express.json())
 
 app.use('/api/users', usersRouter)
+app.use('/api/transactions', transactionsRouter)
 app.use('/api/transaction', transactionsRouter)
 
 const swaggerHtml = `

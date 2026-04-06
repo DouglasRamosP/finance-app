@@ -1,5 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { DeleteTransactionUseCase } from '../../src/user-case/transaction/delete-transaction'
+import {
+    TransactionNotFoundError,
+    UnauthorizedTransactionAccessError,
+} from '../../src/errors/transaction.js'
 import { transaction } from '../fixtures/transaction'
 
 describe('DeleteTransactionUseCase', () => {
@@ -75,5 +79,36 @@ describe('DeleteTransactionUseCase', () => {
 
         // expect
         await expect(promise).rejects.toThrow()
+    })
+
+    it('should throw TransactionNotFoundError when transaction does not exist', async () => {
+        const { sut, getTransactionByIdRepository } = makeSut()
+        const id = faker.string.uuid()
+
+        jest.spyOn(
+            getTransactionByIdRepository,
+            'execute',
+        ).mockResolvedValueOnce(null)
+
+        await expect(sut.execute(id, user_id)).rejects.toThrow(
+            new TransactionNotFoundError(id),
+        )
+    })
+
+    it('should throw UnauthorizedTransactionAccessError when transaction belongs to another user', async () => {
+        const { sut, getTransactionByIdRepository } = makeSut()
+        const id = faker.string.uuid()
+
+        jest.spyOn(
+            getTransactionByIdRepository,
+            'execute',
+        ).mockResolvedValueOnce({
+            ...transaction,
+            user_id: faker.string.uuid(),
+        })
+
+        await expect(sut.execute(id, user_id)).rejects.toThrow(
+            new UnauthorizedTransactionAccessError(),
+        )
     })
 })

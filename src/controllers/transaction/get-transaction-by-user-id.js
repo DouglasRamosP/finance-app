@@ -3,6 +3,7 @@ import { UserNotFoundError } from '../../errors/user.js'
 import { getTransactionByUserIdSchema } from '../../schemas/transaction.js'
 import { badRequest, ok, serverError } from '../helpers/http.js'
 import { userNotFoundResponse } from '../helpers/response.js'
+import { serializeTransactions } from '../../utils/serialize-transaction.js'
 
 export class GetTransactionByUserIdController {
     constructor(getTransactionByUserIdUseCase) {
@@ -10,7 +11,6 @@ export class GetTransactionByUserIdController {
     }
     async execute(httpRequest) {
         try {
-            // Verificar se o userId foi passado como parametro
             const userId = httpRequest.query.userId
             const from = httpRequest.query.from
             const to = httpRequest.query.to
@@ -20,23 +20,27 @@ export class GetTransactionByUserIdController {
                 from,
                 to,
             })
-            // Chamar Use Case
+
             const getTransaction =
-                await this.getTransactionByUserIdUseCase.execute(userId)
+                await this.getTransactionByUserIdUseCase.execute(
+                    userId,
+                    from,
+                    to,
+                )
 
-            return ok(getTransaction)
-            // retomar resposta http
+            return ok(serializeTransactions(getTransaction))
         } catch (error) {
-            console.error(error)
-
             if (error instanceof ZodError) {
-                return badRequest(error)
+                return badRequest({
+                    message: error.issues[0].message,
+                })
             }
 
             if (error instanceof UserNotFoundError) {
                 return userNotFoundResponse()
             }
 
+            console.error(error)
             return serverError()
         }
     }

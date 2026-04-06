@@ -41,3 +41,10 @@ export const unauthorized = (body) => {
         body,
     }
 }
+
+export const forbidden = (body) => {
+    return {
+        statusCode: 403,
+        body,
+    }
+}

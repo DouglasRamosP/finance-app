@@ -3,6 +3,7 @@ import { createTransactionSchema } from '../../schemas/transaction.js'
 import { badRequest, created, serverError } from '../helpers/http.js'
 import { UserNotFoundError } from '../../errors/user.js'
 import { userNotFoundResponse } from '../helpers/response.js'
+import { serializeTransaction } from '../../utils/serialize-transaction.js'
 
 export class CreateTransactionController {
     constructor(createTransactionUseCase) {
@@ -17,7 +18,7 @@ export class CreateTransactionController {
             const transaction =
                 await this.createTransactionUseCase.execute(params)
 
-            return created(transaction)
+            return created(serializeTransaction(transaction))
         } catch (error) {
             if (error instanceof ZodError) {
                 return badRequest({

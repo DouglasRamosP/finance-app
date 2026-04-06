@@ -4,20 +4,24 @@ import {
     makerDeleteTransactionController,
     makerGetTransactionByUserIdController,
     makerUpdateTransactionController,
-} from '../factories/controllers//transaction.js'
+} from '../factories/controllers/transaction.js'
 import { auth } from '../middleweres/auth.js'
 
 export const transactionsRouter = Router()
 
+const getTransactionIdFromParams = (params) => {
+    return params.id ?? params.transactionId
+}
+
 transactionsRouter.delete(
-    '/me/:transactionId',
+    ['/me/:id', '/me/:transactionId'],
     auth,
     async (request, response) => {
         const deleteTransactionController = makerDeleteTransactionController()
 
         const { statusCode, body } = await deleteTransactionController.execute({
             params: {
-                transactionId: request.params.transactionId,
+                transactionId: getTransactionIdFromParams(request.params),
                 userId: request.userId,
             },
         })
@@ -27,13 +31,15 @@ transactionsRouter.delete(
 )
 
 transactionsRouter.patch(
-    '/me/:transactionId',
+    ['/me/:id', '/me/:transactionId'],
     auth,
     async (request, response) => {
         const updateTransactionController = makerUpdateTransactionController()
 
         const { statusCode, body } = await updateTransactionController.execute({
-            params: request.params,
+            params: {
+                transactionId: getTransactionIdFromParams(request.params),
+            },
             body: request.body,
             userId: request.userId,
         })
@@ -46,12 +52,10 @@ transactionsRouter.get('/me', auth, async (request, response) => {
     const getTransactionByIdController = makerGetTransactionByUserIdController()
 
     const { statusCode, body } = await getTransactionByIdController.execute({
-        ...request,
         query: {
-            ...request.query,
+            userId: request.userId,
             from: request.query.from,
             to: request.query.to,
-            userId: request.userId,
         },
     })
 

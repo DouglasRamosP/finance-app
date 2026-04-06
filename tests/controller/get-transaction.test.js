@@ -8,7 +8,7 @@ describe('GetTransactionController', () => {
     const to = '2024-12-31'
     class GetTransactionUseCaseStub {
         async execute() {
-            return transaction
+            return [transaction]
         }
     }
 
@@ -103,6 +103,6 @@ describe('GetTransactionController', () => {
             },
         })
         // assert
-        expect(executeSpy).toHaveBeenCalledWith(userId)
+        expect(executeSpy).toHaveBeenCalledWith(userId, from, to)
     })
 })
