@@ -2,6 +2,8 @@
 
 API REST para gerenciamento financeiro (usuários + transações), com autenticação JWT (access token + refresh token), validação com **Zod v4**, e persistência em **PostgreSQL** via **Prisma**.
 
+finance-app é uma API backend de controle financeiro pessoal. Ele permite cadastrar usuários, fazer login com autenticação JWT, registrar transações financeiras e acompanhar saldo por período, separando entradas, despesas e investimentos. A base técnica está em Node.js com Express, Prisma e PostgreSQL, com validação de dados e documentação Swagger em README.md, src/app.js, src/routes/users.js, src/routes/transaction.js e prisma/schema.prisma.
+
 > **Docs interativas (Swagger):** `GET /docs`
 
 ---
